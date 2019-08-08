@@ -13,7 +13,7 @@ To use my modded BombSquad server scripts, just download the latest release of t
 If you find any type of bug, or error in the file and you are sure that is not due to any of your edits, then you may create a issue in this repository, I will look on the issue and will try to fix it.
 
 ## Contributing
-Want to contribute? :tada:
+#### Want to contribute? :tada:
 Every users interested in contributing to this repository and the files are most welcome, I welcome good and relevant contributions but reject the most un-needed ones. If you want to contribute then you may submit your idea through a feature request issue or open a pull request with your added new feature.
 
 ## License
