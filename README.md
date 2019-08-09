@@ -9,6 +9,17 @@ The files are updated regularly after every new release of the original BombSqua
 ## Installation
 To use my modded BombSquad server scripts, just download the latest release of this repository according to the OS system on which you will create the server, and then follow the instructions in the README of the distribution which you cloned/downloaded.
 
+### Youtube video for the installation is coming soon
+
+## New Features
+- Terminal Commands (Full server configuration's and players' control in shortcut with just using the command line terminal)
+- 3D flying maps, also 3D flying powerup for non 3D fly maps
+- Many new custom characters available for everyone with the my characters mod
+- More powerups
+- A cool totally static and fully customizable stats site generator with the ability to chose number of rows to show and search players in the table in the stats site, also a .json file to be read by my discord bot which you can use in discord channels to get your server's players stats
+- Notification when any player joins or leaves
+- All options can be turned on or off in `data/scripts/settings.py`
+
 ## Error
 If you find any type of bug, or error in the file and you are sure that is not due to any of your edits, then you may create a issue in this repository, I will look on the issue and will try to fix it.
 
