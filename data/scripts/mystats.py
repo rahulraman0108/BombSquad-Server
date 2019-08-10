@@ -7,7 +7,7 @@ import bs
 import settings
 
 port = 43210  # The port of your party in `bombsquad_server`
-partyName = "Someone's awesome party"  # The name of your party in `bombsquad_server`
+partyName = settings.partyName  # The name of your party in `bombsquad_server`
 webServerRootDirectory = "/var/www/html/"  # The directory which is served by the web server on your system
 stats_file = bs.getEnvironment()['systemScriptsDirectory']+"/stats.json"  # Don't change
 mainHTMLFile = webServerRootDirectory + "index.html"  # Try not to use another name instead of index

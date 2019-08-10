@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import bs
 import bsInternal
-import bsUtils
 import json
-import mystats
 import os
+import settings
 
 
 class chatOptions(object):
@@ -14,9 +13,12 @@ class chatOptions(object):
         a = msg.split(' ')[1:]  # arguments
 
         activity = bsInternal._getForegroundHostActivity()
+        partyName = settings.partyName
+        self.run(nick, m, a, activity, partyName)
+
+    def run(self, nick, m, a, activity, partyName):
         with bs.Context(activity):
             if m == "/help":
-                partyName = mystats.partyName
                 bsInternal._chatMessage(partyName + " party\'s help message:")
                 bsInternal._chatMessage("Party helped by TheGreat.")
                 if ("rules" not in a) and ("stats" not in a):
@@ -31,25 +33,11 @@ class chatOptions(object):
                     bsInternal._chatMessage("This command is used to get the rules of playing in this party.")
                     bsInternal._chatMessage("Syntax: `/rules`.")
             elif m == '/stats':
-                if a == []:
-                    for player in activity.players:
-                        if player.getName().encode('utf-8').find(
-                                nick.encode('utf-8').replace('...', '').replace(':', '')) != -1:
-                            if not os.path.exists(bs.getEnvironment()['systemScriptsDirectory'] + "/pStats.json"): return bsInternal._chatMessage("Sorry try again in next match.")
-                            f = open(bs.getEnvironment()['systemScriptsDirectory'] + "/pStats.json", "r")
-                            pats = json.loads(f.read())
-                            if player.get_account_id() in pats:
-                                bsInternal._chatMessage(("Player: " + player.getName() + ", this season's rank: " +
-                                                         pats[str(player.get_account_id())]["rank"]))
-                                bsInternal._chatMessage(("Games played: " + pats[str(player.get_account_id())][
-                                    "games"] + ", Total scores: " + pats[str(player.get_account_id())]["scores"]))
-                                bsInternal._chatMessage(("Kills: " + pats[str(player.get_account_id())][
-                                    "kills"] + ",Deaths: " + pats[str(player.get_account_id())]["deaths"]))
-                            else:
-                                bsInternal._chatMessage(
-                                    "The player " + str(player.getName()) + " is not yet registered")
-                else:
-                    player = activity.players[int(a[0])]
+                def execute(player):
+                    if not os.path.exists(bs.getEnvironment()['systemScriptsDirectory'] + "/pStats.json"):
+                        if not settings.generateStats:
+                            return bsInternal._chatMessage("Sorry stats is not generated in this party.")
+                        return bsInternal._chatMessage("Sorry try again in next match.")
                     f = open(bs.getEnvironment()['systemScriptsDirectory'] + "/pStats.json", "r")
                     pats = json.loads(f.read())
                     if player.get_account_id() in pats:
@@ -62,6 +50,14 @@ class chatOptions(object):
                     else:
                         bsInternal._chatMessage(
                             "The player " + str(player.getName()) + " is not yet registered")
+                if a == []:
+                    for player in activity.players:
+                        if player.getName().encode('utf-8').find(
+                                nick.encode('utf-8').replace('...', '').replace(':', '')) != -1:
+                            execute(player)
+                else:
+                    player = activity.players[int(a[0])]
+                    execute(player)
             elif m == '/rules':
                 bsInternal._chatMessage("1) Never betray teammates")
                 bsInternal._chatMessage("2) Do not vote kick without reason")

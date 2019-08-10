@@ -14,3 +14,5 @@ generateStats = False  # Whether or not to generate the html stats of the server
 
 botFile = True  # Whether or not to generate the file to be read by my discord bot,
 # botFile won't work if `generateStats` is False
+
+partyName = "Someone's party"  # Type your party's name here.
