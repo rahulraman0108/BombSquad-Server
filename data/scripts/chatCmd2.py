@@ -3,6 +3,8 @@ import bs
 import bsInternal
 import bsUtils
 import json
+import mystats
+import os
 
 
 class chatOptions(object):
@@ -14,9 +16,9 @@ class chatOptions(object):
         activity = bsInternal._getForegroundHostActivity()
         with bs.Context(activity):
             if m == "/help":
-                partyName = "Cobra |EPICS|"
+                partyName = mystats.partyName
                 bsInternal._chatMessage(partyName + " party\'s help message:")
-                bsInternal._chatMessage("Party by TheGreat.")
+                bsInternal._chatMessage("Party helped by TheGreat.")
                 if ("rules" not in a) and ("stats" not in a):
                     bsInternal._chatMessage("Send `/help <command>` to get help of a particular command.")
                     bsInternal._chatMessage("Send `/rules` to get rules of playing in this party.")
@@ -33,6 +35,7 @@ class chatOptions(object):
                     for player in activity.players:
                         if player.getName().encode('utf-8').find(
                                 nick.encode('utf-8').replace('...', '').replace(':', '')) != -1:
+                            if not os.path.exists(bs.getEnvironment()['systemScriptsDirectory'] + "/pStats.json"): return bsInternal._chatMessage("Sorry try again in next match.")
                             f = open(bs.getEnvironment()['systemScriptsDirectory'] + "/pStats.json", "r")
                             pats = json.loads(f.read())
                             if player.get_account_id() in pats:

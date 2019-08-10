@@ -11,7 +11,7 @@ import getPermissionsHashes as gph
 
 class PermissionEffect(object):
     def __init__(self, position=(0, 1, 0), owner=None, prefix='ADMIN', prefixColor=(1, 1, 1),
-                 prefixAnim=None, prefixAnimate=True, particles=True, particles2=False):
+                 prefixAnim=None, prefixAnimate=True, particles=True, particles2=False, type=1):
         if prefixAnim is None:
             prefixAnim = {0: (1, 1, 1), 500: (0.5, 0.5, 0.5)}
         self.position = position
@@ -45,7 +45,10 @@ class PermissionEffect(object):
             self.timer = bs.Timer(8, bs.Call(b), repeat=True)
 
         # prefix
-        m = bs.newNode('math', owner=self.owner, attrs={'input1': (0, 1.55, 0), 'operation': 'add'})
+        if type == 1:
+            m = bs.newNode('math', owner=self.owner, attrs={'input1': (0, 1.80, 0), 'operation': 'add'})
+        else:
+            m = bs.newNode('math', owner=self.owner, attrs={'input1': (0, 1.50, 0), 'operation': 'add'})
         self.owner.connectAttr('position', m, 'input2')
 
         self._Text = bs.newNode('text',
@@ -154,7 +157,7 @@ def __init__(self, color=(1, 1, 1), highlight=(0.5, 0.5, 0.5), character="Spaz",
         if jd.get(str(aid), None) is not None:
             PermissionEffect(owner=self.node, prefix=str(jd[str(aid)]),
                              prefixAnim={0: (1, 0, 0), 250: (0, 1, 0), 250 * 2: (0, 0, 1), 250 * 3: (1, 0, 0)},
-                             particles=False, particles2=True)
+                             particles=False, particles2=True, type=2)
     clID = self._player.getInputDevice().getClientID()
     cl_str = []
     for client in bsInternal._getGameRoster():
