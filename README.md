@@ -11,11 +11,23 @@ To use my modded BombSquad server scripts, just download the latest release of t
 
 ### Youtube video for the installation is coming soon
 
+## Important things to keep in mind:
+- If you want a custom playlist then make and export the playlist only from the latest BombSquad game version
+- Do not add any other map in the playlist which is not present in the server files.
+- Also, please try not to include all same games in a playlist at least use two different games in a playlist.
+
 ## New Features
 - Terminal Commands (Full server configuration's and players' control in shortcut with just using the command line terminal)
+- Owners, co-leaders, admins, etc
+- Any player can get his/her stats just by sending `/stats` in the server chat
+- Special prefixes for top 5 scorers
 - 3D flying maps, also 3D flying powerup for non 3D fly maps
 - Many new custom characters available for everyone with the my characters mod
 - More powerups
+- New minigames
+- Names on powerups
+- Shield of powerups
+- Disco lights on powerups
 - A cool totally static and fully customizable stats site generator with the ability to chose number of rows to show and search players in the table in the stats site, also a .json file to be read by my discord bot which you can use in discord channels to get your server's players stats
 - Notification when any player joins or leaves
 - All options can be turned on or off in `data/scripts/settings.py`
