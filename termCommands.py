@@ -28,8 +28,8 @@ exec(c)\n""")
 
     def run(self, command, args):
         """To run an analyzed command with arguments."""
-        self.stdin.write("# coding=utf-8\nimport weakref\nactivity = weakref.ref(bs.getActivity())\n" +
-                         "import getPermissionsHashes as gph\n")
+        self.stdin.write("# coding=utf-8\nimport weakref\na = bs.getActivity()\nactivity = weakref.ref(a)\n" +
+                         "del(a)\nimport getPermissionsHashes as gph\n")
         if command == '/kick':
             if not args:
                 return
@@ -126,6 +126,12 @@ oohRecurce(int(""" + str(s) + """))\n""")
                 self.stdin.flush()
         elif command == "/quit":
             self.stdin.write("bsInternal.quit()\n")
+            self.stdin.flush()
+        elif command == "/say":
+            say = ""
+            for i in range(args):
+                say += str(args[i])
+            self.stdin.write("bsInternal._chatMessage('"+str(say)+"')\n")
             self.stdin.flush()
         elif command == '/freeze':
             if not args:

@@ -17,9 +17,9 @@ class PowerupMessage(object):
     Tell something to get a powerup.
     This message is normally recieved by touching
     a bs.Powerup box.
-
+    
     Attributes:
-
+    
        powerupType
           The type of powerup to be granted (a string).
           See bs.Powerup.powerupType for available type values.
@@ -58,7 +58,7 @@ class _TouchedMessage(object):
 class PowerupFactory(object):
     """
     category: Game Flow Classes
-
+    
     Wraps up media and other resources used by bs.Powerups.
     A single instance of this is shared between all powerups
     and can be retrieved via bs.Powerup.getFactory().
@@ -116,6 +116,12 @@ class PowerupFactory(object):
     """
 
     def __init__(self):
+        """
+        Instantiate a PowerupFactory.
+        You shouldn't need to do this; call bs.Powerup.getFactory()
+        to get a shared instance.
+        """
+
         self._lastPowerupType = None
 
         self.model = bs.getModel("powerup")
@@ -131,21 +137,20 @@ class PowerupFactory(object):
         self.texLandMines = bs.getTexture("powerupLandMines")
         self.texCurse = bs.getTexture("powerupCurse")
         self.texFly = bs.getTexture("achievementOnslaught")
-        # Add for Bunnybot:
         self.eggModel = bs.getModel('egg')
         self.texEgg = bs.getTexture('eggTex1')
-        # Add for snoBalls:
-        self.texSno = bs.getTexture("bunnyColor")  # Bunny is most uniform plain white color.
-        self.snoModel = bs.getModel("frostyPelvis")  # Frosty pelvis is very nice and round...
-        self.healthPowerupSound = bs.getSound("healthPowerup")
-        self.powerupSound = bs.getSound("powerup01")
-        self.powerdownSound = bs.getSound("powerdown01")
-        self.dropSound = bs.getSound("boxDrop")
+        self.texSno = bs.getTexture("bunnyColor")
+        self.snoModel = bs.getModel("frostyPelvis")
         self.texPort = bs.getTexture("ouyaOButton")
         self.texAche = bs.getTexture("achievementOnslaught")
         self.flyModel = bs.getModel("flash")
         self.texMTweaker = bs.getTexture("achievementFlawlessVictory")
         self.texAntiGrav = bs.getTexture("achievementFootballShutout")
+
+        self.healthPowerupSound = bs.getSound("healthPowerup")
+        self.powerupSound = bs.getSound("powerup01")
+        self.powerdownSound = bs.getSound("powerdown01")
+        self.dropSound = bs.getSound("boxDrop")
 
         # material for powerups
         self.powerupMaterial = bs.Material()
@@ -162,11 +167,13 @@ class PowerupFactory(object):
 
         # we dont wanna be picked up
         self.powerupMaterial.addActions(
-            conditions=("theyHaveMaterial", bs.getSharedObject('pickupMaterial')),
+            conditions=("theyHaveMaterial",
+                        bs.getSharedObject('pickupMaterial')),
             actions=(("modifyPartCollision", "collide", False)))
 
         self.powerupMaterial.addActions(
-            conditions=("theyHaveMaterial", bs.getSharedObject('footingMaterial')),
+            conditions=("theyHaveMaterial",
+                        bs.getSharedObject('footingMaterial')),
             actions=(("impactSound", self.dropSound, 0.5, 0.1)))
 
         self._powerupDist = []
@@ -174,7 +181,7 @@ class PowerupFactory(object):
             for i in range(int(freq)):
                 self._powerupDist.append(p)
 
-    def getRandomPowerupType(self, forceType=None, excludeTypes=None):
+    def getRandomPowerupType(self, forceType=None, excludeTypes=[]):
         """
         Returns a random powerup type (string).
         See bs.Powerup.powerupType for available type values.
@@ -186,13 +193,6 @@ class PowerupFactory(object):
         (ie: forcing a 'curse' powerup will result
         in the next powerup being health).
         """
-        if excludeTypes is not None:
-            # exclude custom powerups if there is some custom powerup logic
-            # example: bsFootball.py:456
-            excludeTypes.append('snoball')
-            excludeTypes.append('bunny')
-        else:
-            excludeTypes = []
         if forceType:
             t = forceType
         else:
@@ -258,7 +258,7 @@ class Powerup(bs.Actor):
         bs.Actor.__init__(self)
 
         factory = self.getFactory()
-        self.powerupType = powerupType
+        self.powerupType = powerupType;
         self._powersGiven = False
 
         mod = factory.model
@@ -323,6 +323,7 @@ class Powerup(bs.Actor):
 
         if len(position) != 3: raise Exception("expected 3 floats for position")
 
+        self.port = None
         self.node = bs.newNode('prop',
                                delegate=self,
                                attrs={'body': 'box',
@@ -379,8 +380,10 @@ class Powerup(bs.Actor):
         bs.gameTimer(200, curve.delete)
 
         if expire:
-            bs.gameTimer(defaultPowerupInterval - 2500, bs.WeakCall(self._startFlashing))
-            bs.gameTimer(defaultPowerupInterval - 1000, bs.WeakCall(self.handleMessage, bs.DieMessage()))
+            bs.gameTimer(defaultPowerupInterval - 2500,
+                         bs.WeakCall(self._startFlashing))
+            bs.gameTimer(defaultPowerupInterval - 1000,
+                         bs.WeakCall(self.handleMessage, bs.DieMessage()))
 
     @classmethod
     def getFactory(cls):
@@ -398,25 +401,22 @@ class Powerup(bs.Actor):
     def _startFlashing(self):
         if self.node.exists(): self.node.flashing = True
 
-    def delpor(self):
-        self.port.delete()
-
-    def handleMessage(self, m):
+    def handleMessage(self, msg):
         self._handleMessageSanityCheck()
 
-        if isinstance(m, PowerupAcceptMessage):
+        if isinstance(msg, PowerupAcceptMessage):
             factory = self.getFactory()
             if self.powerupType == 'health':
-                bs.playSound(factory.healthPowerupSound, 3, position=self.node.position)
+                bs.playSound(factory.healthPowerupSound, 3,
+                             position=self.node.position)
             bs.playSound(factory.powerupSound, 3, position=self.node.position)
             self._powersGiven = True
             self.handleMessage(bs.DieMessage())
 
-        elif isinstance(m, _TouchedMessage):
+        elif isinstance(msg, _TouchedMessage):
             if not self._powersGiven:
                 node = bs.getCollisionInfo("opposingNode")
                 if node is not None and node.exists():
-                    # We won't tell the spaz about the bunny.  It'll just happen.
                     if self.powerupType == 'bunny':
                         p = node.getDelegate().getPlayer()
                         if 'bunnies' not in p.gameData:
@@ -424,8 +424,6 @@ class Powerup(bs.Actor):
                         p.gameData['bunnies'].doBunny()
                         self._powersGiven = True
                         self.handleMessage(bs.DieMessage())
-                    # a Spaz doesn't know what to do with a snoball powerup. All the snowball functionality
-                    # is handled through SnoBallz.py to minimize modifications to the original game files
                     elif self.powerupType == 'snoball':
                         spaz = node.getDelegate()
                         SnoBallz.snoBall().getFactory().giveBallz(spaz)
@@ -467,49 +465,29 @@ class Powerup(bs.Actor):
                             bs.gameTimer(bsSpaz.gPowerupWearOffTime, reset)
                         self._powersGiven = True
                         self.handleMessage(bs.DieMessage())
-                        """elif self.powerupType == "antiGrav":
-                        spaz = node.getDelegate()
-                        spaz.bombType = "antiGrav"
-                        tex = bs.Powerup.getFactory().texAntiGrav
-                        spaz._flashBillboard(tex)
-
-                        if spaz.powerupsExpire:
-                            spaz.node.miniBillboard2Texture = tex
-                            t = bs.getGameTime()
-                            spaz.node.miniBillboard2StartTime = t
-                            spaz.node.miniBillboard2EndTime = t + bsSpaz.gPowerupWearOffTime
-                            spaz._bombWearOffFlashTimer = bs.Timer(bsSpaz.gPowerupWearOffTime - 2000,
-                                                                   bs.WeakCall(spaz._bombWearOffFlash))
-                            bs.gameTimer(bsSpaz.gPowerupWearOffTime, spaz._bombWearOff)
-                        self._powersGiven = True
-                        self.handleMessage(bs.DieMessage())"""
                     elif self.powerupType == "motionTweaker":
                         bs.getSharedObject('globals').slowMotion = bs.getSharedObject('globals').slowMotion is False
                         self._powersGiven = True
                         self.handleMessage(bs.DieMessage())
                     else:
                         node.handleMessage(PowerupMessage(self.powerupType, sourceNode=self.node))
-                    if self.nodeLight.exists():
-                        self.nodeLight.delete()
 
-        elif isinstance(m, bs.DieMessage):
+        elif isinstance(msg, bs.DieMessage):
             if self.node.exists():
-                if (m.immediate):
+                if (msg.immediate):
                     self.node.delete()
                 else:
                     curve = bs.animate(self.node, "modelScale", {0: 1, 100: 0})
                     bs.gameTimer(100, self.node.delete)
-            try:
-                if self.nodeLight.exists():
-                    self.nodeLight.delete()
-            except:
-                pass
+            if self.nodeLight.exists():
+                self.nodeLight.delete()
 
-        elif isinstance(m, bs.OutOfBoundsMessage):
+        elif isinstance(msg, bs.OutOfBoundsMessage):
             self.handleMessage(bs.DieMessage())
 
-        elif isinstance(m, bs.HitMessage):
-            if m.hitType != 'punch':
+        elif isinstance(msg, bs.HitMessage):
+            # dont die on punches (that's annoying)
+            if msg.hitType != 'punch':
                 self.handleMessage(bs.DieMessage())
         else:
-            bs.Actor.handleMessage(self, m)
+            bs.Actor.handleMessage(self, msg)

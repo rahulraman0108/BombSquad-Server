@@ -106,85 +106,7 @@ class AntiGravArea(object):
 class NewBombFactory(BombFactory):
     def __init__(self):
         BombFactory.__init__(self)
-        self.bombModel = bs.getModel('bomb')
-        self.stickyBombModel = bs.getModel('bombSticky')
-        self.impactBombModel = bs.getModel('impactBomb')
-        self.landMineModel = bs.getModel('landMine')
-        self.tntModel = bs.getModel('tnt')
-
-        self.regularTex = bs.getTexture('bombColor')
-        self.iceTex = bs.getTexture('bombColorIce')
-        self.stickyTex = bs.getTexture('bombStickyColor')
-        self.impactTex = bs.getTexture('impactBombColor')
-        self.impactLitTex = bs.getTexture('impactBombColorLit')
-        self.landMineTex = bs.getTexture('landMine')
-        self.landMineLitTex = bs.getTexture('landMineLit')
-        self.tntTex = bs.getTexture('tnt')
         self.newTex = bs.getTexture("achievementOnslaught")
-
-        self.hissSound = bs.getSound('hiss')
-        self.debrisFallSound = bs.getSound('debrisFall')
-        self.woodDebrisFallSound = bs.getSound('woodDebrisFall')
-
-        self.explodeSounds = (bs.getSound('explosion01'),
-                              bs.getSound('explosion02'),
-                              bs.getSound('explosion03'),
-                              bs.getSound('explosion04'),
-                              bs.getSound('explosion05'))
-
-        self.freezeSound = bs.getSound('freeze')
-        self.fuseSound = bs.getSound('fuse01')
-        self.activateSound = bs.getSound('activateBeep')
-        self.warnSound = bs.getSound('warnBeep')
-
-        # set up our material so new bombs dont collide with objects
-        # that they are initially overlapping
-        self.bombMaterial = bs.Material()
-        self.normalSoundMaterial = bs.Material()
-        self.stickyMaterial = bs.Material()
-
-        self.bombMaterial.addActions(
-            conditions=((('weAreYoungerThan', 100),
-                         'or', ('theyAreYoungerThan', 100)),
-                        'and', ('theyHaveMaterial',
-                                bs.getSharedObject('objectMaterial'))),
-            actions=(('modifyNodeCollision', 'collide', False)))
-
-        # we want pickup materials to always hit us even if we're currently not
-        # colliding with their node (generally due to the above rule)
-        self.bombMaterial.addActions(
-            conditions=('theyHaveMaterial',
-                        bs.getSharedObject('pickupMaterial')),
-            actions=(('modifyPartCollision', 'useNodeCollide', False)))
-
-        self.bombMaterial.addActions(actions=('modifyPartCollision',
-                                              'friction', 0.3))
-
-        self.landMineNoExplodeMaterial = bs.Material()
-        self.landMineBlastMaterial = bs.Material()
-        self.landMineBlastMaterial.addActions(
-            conditions=(
-                ('weAreOlderThan', 200),
-                'and', ('theyAreOlderThan', 200),
-                'and', ('evalColliding',),
-                'and', (('theyDontHaveMaterial',
-                         self.landMineNoExplodeMaterial),
-                        'and', (('theyHaveMaterial',
-                                 bs.getSharedObject('objectMaterial')),
-                                'or', ('theyHaveMaterial',
-                                       bs.getSharedObject('playerMaterial'))))),
-            actions=(('message', 'ourNode', 'atConnect', ImpactMessage())))
-
-        self.impactBlastMaterial = bs.Material()
-        self.impactBlastMaterial.addActions(
-            conditions=(('weAreOlderThan', 200),
-                        'and', ('theyAreOlderThan', 200),
-                        'and', ('evalColliding',),
-                        'and', (('theyHaveMaterial',
-                                 bs.getSharedObject('footingMaterial')),
-                                'or', ('theyHaveMaterial',
-                                       bs.getSharedObject('objectMaterial')))),
-            actions=(('message', 'ourNode', 'atConnect', ImpactMessage())))
 
         self.newImpactBlastMaterial = bs.Material()
         self.newImpactBlastMaterial.addActions(
@@ -195,37 +117,6 @@ class NewBombFactory(BombFactory):
                         'and', ('theyHaveMaterial', self.bombMaterial),
                         'and', ('theyDontHaveMaterial', self.newImpactBlastMaterial)),
             actions=(('message', 'ourNode', 'atConnect', ImpactMessage())))
-
-        self.blastMaterial = bs.Material()
-        self.blastMaterial.addActions(
-            conditions=(('theyHaveMaterial',
-                         bs.getSharedObject('objectMaterial'))),
-            actions=(('modifyPartCollision', 'collide', True),
-                     ('modifyPartCollision', 'physical', False),
-                     ('message', 'ourNode', 'atConnect', ExplodeHitMessage())))
-
-        self.dinkSounds = (bs.getSound('bombDrop01'),
-                           bs.getSound('bombDrop02'))
-        self.stickyImpactSound = bs.getSound('stickyImpact')
-        self.rollSound = bs.getSound('bombRoll01')
-
-        # collision sounds
-        self.normalSoundMaterial.addActions(
-            conditions=('theyHaveMaterial',
-                        bs.getSharedObject('footingMaterial')),
-            actions=(('impactSound', self.dinkSounds, 2, 0.8),
-                     ('rollSound', self.rollSound, 3, 6)))
-
-        self.stickyMaterial.addActions(
-            actions=(('modifyPartCollision', 'stiffness', 0.1),
-                     ('modifyPartCollision', 'damping', 1.0)))
-
-        self.stickyMaterial.addActions(
-            conditions=(('theyHaveMaterial',
-                         bs.getSharedObject('playerMaterial')),
-                        'or', ('theyHaveMaterial',
-                               bs.getSharedObject('footingMaterial'))),
-            actions=(('message', 'ourNode', 'atConnect', SplatMessage())))
 
 
 class NewBlast(Blast):
@@ -342,40 +233,64 @@ class NewBlast(Blast):
 
             bs.gameTimer(50, _doEmit)  # looks better if we delay a bit
 
+
         else:  # regular or land mine bomb shrapnel
+
             def _doEmit():
+
                 if self.blastType != 'tnt':
                     bs.emitBGDynamics(position=position, velocity=velocity,
+
                                       count=int(4.0 + random.random() * 8),
+
                                       chunkType='rock');
+
                     bs.emitBGDynamics(position=position, velocity=velocity,
+
                                       count=int(4.0 + random.random() * 8),
+
                                       scale=0.5, chunkType='rock');
+
                 bs.emitBGDynamics(position=position, velocity=velocity,
+
                                   count=30,
+
                                   scale=1.0 if self.blastType == 'tnt' else 0.7,
+
                                   chunkType='spark', emitType='stickers');
+
                 bs.emitBGDynamics(position=position, velocity=velocity,
+
                                   count=int(18.0 + random.random() * 20),
+
                                   scale=1.0 if self.blastType == 'tnt' else 0.8,
+
                                   spread=1.5, chunkType='spark');
 
                 # tnt throws splintery chunks
+
                 if self.blastType == 'tnt':
                     def _emitSplinters():
                         bs.emitBGDynamics(position=position, velocity=velocity,
+
                                           count=int(20.0 + random.random() * 25),
+
                                           scale=0.8, spread=1.0,
+
                                           chunkType='splinter');
 
                     bs.gameTimer(10, _emitSplinters)
 
                 # every now and then do a sparky one
+
                 if self.blastType == 'tnt' or random.random() < 0.1:
                     def _emitExtraSparks():
                         bs.emitBGDynamics(position=position, velocity=velocity,
+
                                           count=int(10.0 + random.random() * 20),
+
                                           scale=0.8, spread=1.5,
+
                                           chunkType='spark');
 
                     bs.gameTimer(20, _emitExtraSparks)
@@ -383,51 +298,79 @@ class NewBlast(Blast):
             bs.gameTimer(50, _doEmit)  # looks better if we delay a bit
 
         light = bs.newNode('light', attrs={
+
             'position': position,
+
             'volumeIntensityScale': 10.0,
+
             'color': ((0.6, 0.6, 1.0) if self.blastType == 'ice'
+
                       else (1, 0.3, 0.1))})
 
         s = random.uniform(0.6, 0.9)
+
         scorchRadius = lightRadius = self.radius
+
         if self.blastType == 'tnt':
             lightRadius *= 1.4
+
             scorchRadius *= 1.15
+
             s *= 3.0
 
         iScale = 1.6
+
         bsUtils.animate(light, "intensity", {
+
             0: 2.0 * iScale, int(s * 20): 0.1 * iScale,
+
             int(s * 25): 0.2 * iScale, int(s * 50): 17.0 * iScale, int(s * 60): 5.0 * iScale,
+
             int(s * 80): 4.0 * iScale, int(s * 200): 0.6 * iScale,
+
             int(s * 2000): 0.00 * iScale, int(s * 3000): 0.0})
+
         bsUtils.animate(light, "radius", {
+
             0: lightRadius * 0.2, int(s * 50): lightRadius * 0.55,
+
             int(s * 100): lightRadius * 0.3, int(s * 300): lightRadius * 0.15,
+
             int(s * 1000): lightRadius * 0.05})
+
         bs.gameTimer(int(s * 3000), light.delete)
 
         # make a scorch that fades over time
+
         scorch = bs.newNode('scorch', attrs={
+
             'position': position,
+
             'size': scorchRadius * 0.5,
+
             'big': (self.blastType == 'tnt')})
+
+        scorch.color = (random.random(), random.random(), random.random())
         if self.blastType == 'ice':
             scorch.color = (1, 1, 1.5)
 
         bsUtils.animate(scorch, "presence", {3000: 1, 13000: 0})
+
         bs.gameTimer(13000, scorch.delete)
 
         if self.blastType == 'ice':
             bs.playSound(factory.hissSound, position=light.position)
 
         p = light.position
+
         bs.playSound(factory.getRandomExplodeSound(), position=p)
+
         bs.playSound(factory.debrisFallSound, position=p)
 
         bs.shakeCamera(intensity=5.0 if self.blastType == 'tnt' else 1.0)
 
         # tnt is more epic..
+
         if self.blastType == 'tnt':
             bs.playSound(factory.getRandomExplodeSound(), position=p)
 
@@ -438,6 +381,7 @@ class NewBlast(Blast):
 
             def _extraDebrisSound():
                 bs.playSound(factory.debrisFallSound, position=p)
+
                 bs.playSound(factory.woodDebrisFallSound, position=p)
 
             bs.gameTimer(400, _extraDebrisSound)

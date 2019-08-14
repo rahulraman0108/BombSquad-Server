@@ -31,6 +31,11 @@ And done, your server will be online and available to join, if you encounter any
 
 ### Youtube video for the installation is coming soon.
 
+## Important things to keep in mind:
+- If you want a custom playlist then make and export the playlist only from the latest BombSquad game version
+- Do not add any other map in the playlist which is not present in the server files.
+- Also, please try not to include all same games in a playlist at least use two different games in a playlist.
+
 ## New Features
 - Terminal Commands (Full server configuration's and players' control in shortcut with just using the command line terminal)
 - Owners, co-leaders, admins, etc
@@ -39,6 +44,7 @@ And done, your server will be online and available to join, if you encounter any
 - 3D flying maps, also 3D flying powerup for non 3D fly maps
 - Many new custom characters available for everyone with the my characters mod
 - More powerups
+- New minigames
 - Names on powerups
 - Shield of powerups
 - Disco lights on powerups

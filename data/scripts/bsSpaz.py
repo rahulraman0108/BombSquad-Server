@@ -646,7 +646,7 @@ class Spaz(bs.Actor):
         """
         if not self.node.exists(): return
         t = bs.getGameTime()
-        if (hasattr(self.getActivity()._map, "fly") and self.getActivity()._map.fly) or self.jumpTo3DFly:
+        if self.jumpTo3DFly or (hasattr(self.getActivity()._map, "fly") and self.getActivity()._map.fly):
             if not self.node.exists() or self.node.knockout > 0.0:
                 return
             self.node.handleMessage(
@@ -1020,7 +1020,7 @@ class Spaz(bs.Actor):
                     decay=True if factory.shieldDecayRate > 0 else False)
             elif msg.powerupType == 'curse':
                 self.curse()
-            elif msg.powerupType == 'iceBombs':
+            elif (msg.powerupType == 'iceBombs'):
                 self.bombType = 'ice'
                 tex = self._getBombTypeTex()
                 self._flashBillboard(tex)
@@ -1563,8 +1563,6 @@ class Spaz(bs.Actor):
             return bombFactory.texIceBombs
         elif self.bombType == 'impact':
             return bombFactory.texImpactBombs
-        elif self.bombType == 'antiGrav':
-            return bombFactory.texAntiGrav
         else:
             raise Exception()
 

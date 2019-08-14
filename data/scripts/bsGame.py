@@ -525,6 +525,7 @@ class Session(object):
         # hacky way to create empty weak ref; must be a better way...
         class EmptyObj:
             pass
+
         self._activityWeak = weakref.ref(EmptyObj())
         if self._activityWeak() is not None:
             raise Exception("error creating empty weak ref")
@@ -565,7 +566,7 @@ class Session(object):
         # limit player counts based on pro purchase/etc *unless* we're in a
         # stress test
         if settings.joinNotification:
-            print("One or more player requested to join the game.")
+            print("\n\nOne or more player requested to join the game.")
             print("Following are the names of current server players, with their account type and ID.")
             i = 0
             for rtr in bsInternal._getGameRoster():
@@ -576,11 +577,10 @@ class Session(object):
                 if not int(ID) == -1:  # Ignoring the own server account
                     i += 1
                     print(str(i) + ") Account type: " + str(account) + ", name: " + str(name) + ", Client ID: " + str(
-                        ID))
+                        ID) + "\n")
         if bsUtils._gStressTestResetTimer is None:
 
             if len(self.players) >= self._maxPlayers:
-
                 # print a rejection message *only* to the client trying to join
                 # (prevents spamming everyone else in the game)
                 bs.playSound(bs.getSound('error'))
@@ -603,7 +603,7 @@ class Session(object):
         # remove them from the game rosters
         if player in self.players:
             if settings.leaveNotification:
-                print("One or more player left the game.")
+                print("\n\nOne or more player left the game.")
                 print("Following are the names of current server players, with their account type and ID.")
                 i = 0
                 for rtr in bsInternal._getGameRoster():
@@ -615,7 +615,7 @@ class Session(object):
                         i += 1
                         print(
                                 str(i) + ") Account type: " + str(account) + ", name: " + str(
-                            name) + ", Client ID: " + str(ID))
+                            name) + ", Client ID: " + str(ID) + "\n")
 
             bs.playSound(bs.getSound('playerLeft'))
 
@@ -752,7 +752,7 @@ class Session(object):
         with bs.Context(self):
             if self._ending:
                 # ignore repeats unless its been a while..
-                sinceLast = bs.getRealTime()-self._launchEndActivityTime
+                sinceLast = bs.getRealTime() - self._launchEndActivityTime
                 if sinceLast < 3000:
                     return
                 bs.printError(
@@ -994,7 +994,6 @@ class Session(object):
         this means we're ready to begin the next one
         """
         if self._nextActivity is not None:
-
             # we store both a weak and a strong ref to the new activity;
             # the strong is to keep it alive and the weak is so we can access
             # it even after we've released the strong-ref to allow it to die
@@ -1056,9 +1055,9 @@ class Session(object):
         # pass it to the current activity if it has already begun
         # (otherwise it'll get passed once begin is called)
         passToActivity = (
-            activity
-            is not None and activity.hasBegun()
-            and not activity._isJoiningActivity)
+                activity
+                is not None and activity.hasBegun()
+                and not activity._isJoiningActivity)
 
         # if we're not allowing mid-game joins, dont' pass; just announce
         # the arrival
@@ -1386,8 +1385,8 @@ class Activity(object):
                                             'cost': self._continueCost})
                 bsInternal._runTransactions()
                 self._continueCost = (
-                    self._continueCost * self._continueCostMult
-                    + self._continueCostOffset)
+                        self._continueCost * self._continueCostMult
+                        + self._continueCostOffset)
                 self.onContinue()
             else:
                 self.endGame()
@@ -1425,7 +1424,7 @@ class Activity(object):
                                     and bsUI.uiGlobals['mainMenuWindow']
                                     is None
                                     or not bsUI.uiGlobals['mainMenuWindow']
-                                    .exists()):
+                                            .exists()):
                                 self._isWaitingForContinue = True
                                 with bs.Context('UI'):
                                     bs.realTimer(
@@ -1448,8 +1447,8 @@ class Activity(object):
             import gc
             import types
             a = activityRef()
-            print 'ERROR: Activity is not dying when expected:', a,\
-                '(warning '+str(counter[0]+1)+')'
+            print 'ERROR: Activity is not dying when expected:', a, \
+                '(warning ' + str(counter[0] + 1) + ')'
             print 'This means something is still strong-referencing it.'
 
             counter[0] += 1
@@ -1534,7 +1533,7 @@ class Activity(object):
         try:
             self._actorRefs = [a for a in self._actorRefs if a.exists()]
         except Exception:
-            bs.printException('exc pruning '+str(self._actorRefs))
+            bs.printException('exc pruning ' + str(self._actorRefs))
         self._actorWeakRefs = [a for a in self._actorWeakRefs
                                if a() is not None and a().exists()]
         self._lastDeadObjectPruneTime = bs.getGameTime()
@@ -1559,7 +1558,7 @@ class Activity(object):
             bs.printError('it looks like nodes/actors are '
                           'not being pruned in your activity;'
                           ' did you call Activity.onTransitionIn()'
-                          ' from your subclass?; '+ str(self) + ' (loc. b)')
+                          ' from your subclass?; ' + str(self) + ' (loc. b)')
         self._actorWeakRefs.append(weakref.ref(a))
 
     def getSession(self):
@@ -1623,8 +1622,6 @@ class Activity(object):
         and it should begin its actual game logic.
         """
         self._calledActivityOnBegin = True
-        if len(bsInternal._getGameRoster()) < 0:
-            bsInternal._chatMessage("welcome")
 
         bs.gameTimer(100, call=self._checkChat, repeat=True)
 
@@ -1679,7 +1676,7 @@ class Activity(object):
             self._tournamentTimeLimitTimer = self._tournamentTimeLimitText = \
                 self._tournamentTimeLimitTitleText = None
 
-        self.getSession()\
+        self.getSession() \
             .handleMessage(EndActivityMessage(self, results, delay, force))
 
     def hasTransitionedIn(self):
@@ -1888,7 +1885,7 @@ class ScoreScreenActivity(Activity):
     def onPlayerJoin(self, player):
         Activity.onPlayerJoin(self, player)
         timeTillAssign = max(
-            0, self._birthTime+self._minViewTime-bs.getGameTime())
+            0, self._birthTime + self._minViewTime - bs.getGameTime())
         # if we're still kicking at the end of our assign-delay, assign this
         # guy's input to trigger us
         bs.gameTimer(timeTillAssign, bs.WeakCall(self._safeAssign, player))
@@ -1913,12 +1910,12 @@ class ScoreScreenActivity(Activity):
                         # or something.
                         bsInternal._chatMessage(
                             bs.Lstr(resource='internal.serverRestartingText')
-                            .evaluate())
+                                .evaluate())
                         print 'Exiting for server-restart at ' \
-                            + time.strftime('%c')
+                              + time.strftime('%c')
                     else:
                         print 'Exiting for server-shutdown at ' \
-                            + time.strftime('%c')
+                              + time.strftime('%c')
                     with bs.Context('UI'):
                         bs.realTimer(2000, bs.quit)
                     self._kickedOffServerShutdown = True
@@ -1926,7 +1923,7 @@ class ScoreScreenActivity(Activity):
             else:
                 if not getattr(self, '_kickedOffServerRestart', False):
                     print 'Running updated server config at ' \
-                        + time.strftime('%c')
+                          + time.strftime('%c')
                     with bs.Context('UI'):
                         bs.realTimer(1000, bs.Call(
                             bs.pushCall, bsUtils._runServer))
@@ -2043,14 +2040,14 @@ class GameActivity(Activity):
 
         if values['scoreType'] not in ['seconds', 'milliseconds', 'points']:
             raise Exception(
-                "invalid scoreType value: '"+values['scoreType']+"'")
+                "invalid scoreType value: '" + values['scoreType'] + "'")
 
         # make sure they didnt misspell anything in there..
         for name in values.keys():
             if name not in (
-                'scoreName', 'lowerIsBetter', 'noneIsWinner', 'scoreType',
+                    'scoreName', 'lowerIsBetter', 'noneIsWinner', 'scoreType',
                     'scoreVersion'):
-                print 'WARNING: invalid key in scoreInfo: "'+name+'"'
+                print 'WARNING: invalid key in scoreInfo: "' + name + '"'
 
         return values
 
@@ -2237,7 +2234,7 @@ class GameActivity(Activity):
             unOwnedMaps = bsMap._getUnOwnedMaps()
             validMaps = [m
                          for m in self.getSupportedMaps(
-                             type(self.getSession())) if m not in unOwnedMaps]
+                    type(self.getSession())) if m not in unOwnedMaps]
             if len(validMaps) == 0:
                 bs.screenMessage(bs.Lstr(resource='noValidMapsErrorText'))
                 raise Exception("No valid maps")
@@ -2369,8 +2366,8 @@ class GameActivity(Activity):
             if isinstance(s, bs.CoopSession):
                 import bsUI
                 bsInternal._setAnalyticsScreen(
-                    'Coop Game: '+s._campaign.getName()
-                    +' '+s._campaign.getLevel(bsUI.gCoopSessionArgs['level'])
+                    'Coop Game: ' + s._campaign.getName()
+                    + ' ' + s._campaign.getLevel(bsUI.gCoopSessionArgs['level'])
                     .getName())
                 bsInternal._incrementAnalyticsCount('Co-op round start')
                 if len(self.players) == 1:
@@ -2386,7 +2383,7 @@ class GameActivity(Activity):
                     bsInternal._incrementAnalyticsCount(
                         'Co-op round start 4+ human players')
             elif isinstance(s, bs.TeamsSession):
-                bsInternal._setAnalyticsScreen('Teams Game: '+self.getName())
+                bsInternal._setAnalyticsScreen('Teams Game: ' + self.getName())
                 bsInternal._incrementAnalyticsCount('Teams round start')
                 if len(self.players) == 1:
                     bsInternal._incrementAnalyticsCount(
@@ -2400,7 +2397,7 @@ class GameActivity(Activity):
                         'Teams round start 8+ human players')
             elif isinstance(s, bs.FreeForAllSession):
                 bsInternal._setAnalyticsScreen(
-                    'FreeForAll Game: '+self.getName())
+                    'FreeForAll Game: ' + self.getName())
                 bsInternal._incrementAnalyticsCount('Free-for-all round start')
                 if len(self.players) == 1:
                     bsInternal._incrementAnalyticsCount(
@@ -2512,8 +2509,8 @@ class GameActivity(Activity):
 
         isEmpty = (sbDesc[0] == '')
         subs = []
-        for i in range(len(sbDesc)-1):
-            subs.append(('${ARG'+str(i+1)+'}', str(sbDesc[i+1])))
+        for i in range(len(sbDesc) - 1):
+            subs.append(('${ARG' + str(i + 1) + '}', str(sbDesc[i + 1])))
         translation = bs.Lstr(
             translate=('gameDescriptions', sbDesc[0]),
             subs=subs)
@@ -2528,13 +2525,13 @@ class GameActivity(Activity):
             bs.newNode(
                 "text",
                 attrs={'text': sbName, 'maxWidth': 300, 'position': (15, y)
-                       if
-                       isinstance(self.getSession(),
-                                  bs.FreeForAllSession) else(15, y),
+                if
+                isinstance(self.getSession(),
+                           bs.FreeForAllSession) else (15, y),
                        'hAttach': "left", 'vrDepth': 10, 'vAttach': "top",
                        'vAlign': 'bottom', 'color': (1.0, 1.0, 1.0, 1.0),
                        'shadow': 1.0 if vr else 0.6, 'flatness': 1.0
-                       if vr else 0.5, 'scale': 1.1}))
+                    if vr else 0.5, 'scale': 1.1}))
 
         bsUtils.animate(self._gameScoreBoardNameText.node,
                         'opacity', {0: 0.0, 1000: 1.0})
@@ -2546,11 +2543,11 @@ class GameActivity(Activity):
                        'position': (17, -44 + 10)
                        if
                        isinstance(self.getSession(),
-                                  bs.FreeForAllSession) else(17, -44 + 10),
+                                  bs.FreeForAllSession) else (17, -44 + 10),
                        'scale': 0.7, 'hAttach': "left", 'vAttach': "top",
                        'vAlign': 'top', 'shadow': 1.0 if vr else 0.7,
                        'flatness': 1.0 if vr else 0.8, 'color': (1, 1, 1, 1)
-                       if vr else(0.9, 0.9, 0.9, 1.0)}))
+                    if vr else (0.9, 0.9, 0.9, 1.0)}))
 
         bsUtils.animate(self._gameScoreBoardDescriptionText.node,
                         'opacity', {0: 0.0, 1000: 1.0})
@@ -2572,8 +2569,8 @@ class GameActivity(Activity):
         if type(desc[0]) not in [unicode, str]:
             raise Exception("Invalid format for instance description")
         subs = []
-        for i in range(len(desc)-1):
-            subs.append(('${ARG'+str(i+1)+'}', str(desc[i+1])))
+        for i in range(len(desc) - 1):
+            subs.append(('${ARG' + str(i + 1) + '}', str(desc[i + 1])))
         translation = bs.Lstr(
             translate=('gameDescriptions', desc[0]),
             subs=subs)
@@ -2612,7 +2609,7 @@ class GameActivity(Activity):
         if len(self.tips) > 0:
             tip = self.tips.pop(random.randrange(len(self.tips)))
             tipTitle = bs.Lstr(value='${A}:', subs=[
-                               ('${A}', bs.Lstr(resource='tipText'))])
+                ('${A}', bs.Lstr(resource='tipText'))])
             icon = None
             sound = None
             if type(tip) == dict:
@@ -2624,7 +2621,7 @@ class GameActivity(Activity):
 
             # a few subs..
             tip = bs.Lstr(translate=('tips', tip), subs=[
-                          ('${PICKUP}', bs.getSpecialChar('topButton'))])
+                ('${PICKUP}', bs.getSpecialChar('topButton'))])
             basePosition = (75, 50)
             tipScale = 0.8
             tipTitleScale = 1.2
@@ -2636,24 +2633,24 @@ class GameActivity(Activity):
                 attrs={'text': tip, 'scale': tipScale, 'maxWidth': 900,
                        'position': (basePosition[0] + tOffs, basePosition[1]),
                        'hAlign': 'left', 'vrDepth': 300, 'shadow': 1.0
-                       if vr else 0.5, 'flatness': 1.0 if vr else 0.5,
+                    if vr else 0.5, 'flatness': 1.0 if vr else 0.5,
                        'vAlign': 'center', 'vAttach': 'bottom'})
             t2 = bs.newNode(
                 'text', owner=t,
                 attrs={'text': tipTitle, 'scale': tipTitleScale,
                        'position':
-                       (basePosition[0] + tOffs -
-                        (20 if icon is None else 82),
-                        basePosition[1] + 2),
+                           (basePosition[0] + tOffs -
+                            (20 if icon is None else 82),
+                            basePosition[1] + 2),
                        'hAlign': 'right', 'vrDepth': 300, 'shadow': 1.0
-                       if vr else 0.5, 'flatness': 1.0 if vr else 0.5,
+                    if vr else 0.5, 'flatness': 1.0 if vr else 0.5,
                        'maxWidth': 140, 'vAlign': 'center',
                        'vAttach': 'bottom'})
             if icon is not None:
                 img = bs.newNode('image',
                                  attrs={'texture': icon,
-                                        'position': (basePosition[0]+tOffs-40,
-                                                     basePosition[1]+1),
+                                        'position': (basePosition[0] + tOffs - 40,
+                                                     basePosition[1] + 1),
                                         'scale': (50, 50),
                                         'opacity': 1.0,
                                         'vrDepth': 315,
@@ -2661,7 +2658,7 @@ class GameActivity(Activity):
                                         'absoluteScale': True,
                                         'attach': 'bottomCenter'})
                 bsUtils.animate(img, 'opacity', {
-                                0: 0, 1000: 1, 4000: 1, 5000: 0})
+                    0: 0, 1000: 1, 4000: 1, 5000: 0})
                 bs.gameTimer(5000, img.delete)
             if sound is not None:
                 bs.playSound(sound)
@@ -2780,8 +2777,8 @@ class GameActivity(Activity):
         # FIXME; need to generalize this
         if isinstance(
                 self.getSession(),
-                bs.CoopSession) and self.getMap().getName() in[
-                'Courtyard', 'Tower D']:
+                bs.CoopSession) and self.getMap().getName() in [
+            'Courtyard', 'Tower D']:
             mat = self.getMap().preloadData['collideWithWallMaterial']
             spaz.node.materials += (mat,)
             spaz.node.rollerMaterials += (mat,)
@@ -2847,7 +2844,7 @@ class GameActivity(Activity):
         # drop one powerup per point
         pts = self.getMap().powerupSpawnPoints
         for i, pt in enumerate(pts):
-            bs.gameTimer(i*400, bs.WeakCall(self._standardDropPowerup, i))
+            bs.gameTimer(i * 400, bs.WeakCall(self._standardDropPowerup, i))
 
     def _standardDropTnt(self):
         """
@@ -2887,7 +2884,7 @@ class GameActivity(Activity):
                        'position': (-25, -30),
                        'flatness': 1.0, 'scale': 0.9}))
         self._standardTimeLimitTextInput = bs.NodeActor(bs.newNode(
-            'timeDisplay', attrs={'time2': duration*1000, 'timeMin': 0}))
+            'timeDisplay', attrs={'time2': duration * 1000, 'timeMin': 0}))
         bs.getSharedObject('globals').connectAttr(
             'gameTime', self._standardTimeLimitTextInput.node, 'time1')
         self._standardTimeLimitTextInput.node.connectAttr(
@@ -2966,7 +2963,7 @@ class GameActivity(Activity):
         self._tournamentTimeLimitTextInput = bs.NodeActor(
             bs.newNode('timeDisplay', attrs={
                 'timeMin': 0,
-                'time2': self._tournamentTimeLimitTime*1000}))
+                'time2': self._tournamentTimeLimitTime * 1000}))
         self._tournamentTimeLimitTextInput.node.connectAttr(
             'output', self._tournamentTimeLimitText.node, 'text')
 
@@ -2999,15 +2996,15 @@ class GameActivity(Activity):
                        'hAlign': 'center', 'color': (1, 0.7, 0, 1),
                        'position': (0, -200),
                        'scale': 1.6, 'text': bs.Lstr(
-                           resource='tournamentTimeExpiredText',
-                           fallbackResource='timeExpiredText')})
+                        resource='tournamentTimeExpiredText',
+                        fallbackResource='timeExpiredText')})
             bs.playSound(bs.getSound('refWhistle'))
             bsUtils.animate(n, "scale", {0: 0.0, 100: 1.4, 150: 1.2})
 
         # normally we just connect this to time, but since this is a bit of a
         # funky setup we just update it manually once per second..
         self._tournamentTimeLimitTextInput.node.time2 = \
-            self._tournamentTimeLimitTime*1000
+            self._tournamentTimeLimitTime * 1000
 
     def showZoomMessage(
             self, message, color=(0.9, 0.4, 0.0),
@@ -3031,7 +3028,7 @@ class GameActivity(Activity):
                 break
             i += 1
         bsUtils.ZoomText(message, lifespan=duration, jitter=2.0,
-                         position=(0, 200-i*100), scale=scale, maxWidth=800,
+                         position=(0, 200 - i * 100), scale=scale, maxWidth=800,
                          trail=trail, color=color).autoRetain()
 
     def cameraFlash(self, duration=999):
@@ -3071,12 +3068,12 @@ class GameActivity(Activity):
             spd = 0.5 + random.random()
             spd2 = 0.5 + random.random()
             bsUtils.animate(tcombine, 'input0',
-                            {0: x+0, 69*spd: x+10.0,
-                             143*spd: x-10.0, 201*spd: x+0},
+                            {0: x + 0, 69 * spd: x + 10.0,
+                             143 * spd: x - 10.0, 201 * spd: x + 0},
                             loop=True)
             bsUtils.animate(tcombine, 'input2',
-                            {0: y+0, 150*spd2: y+10.0,
-                             287*spd2: y-10.0, 398*spd2: y+0},
+                            {0: y + 0, 150 * spd2: y + 10.0,
+                             287 * spd2: y - 10.0, 398 * spd2: y + 0},
                             loop=True)
             bsUtils.animate(
                 light.node, "intensity",
