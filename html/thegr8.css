@@ -1,0 +1,20 @@
+@font-face { font-family: bs; src: url("font1.ttf");}* { font-family: bs; }
+table.background { background: url(design.jpg) repeat; background-position: middle; background-size: 100%;}
+p.counter {text-align: center; font-size: 22px; margin-top: 0px; color: #d8d8cd;}
+body {background-color: #efb54a;}
+table {border: none; width: 100%; }
+table {font-family: arial, sans-serif;border-collapse: collapse;width: 100%; table-layout: fixed;}
+td, th {border-bottom: 1px solid #cee285;text-align: left;padding: 8px;}
+
+#searchInput {
+  background-image: url('searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+section.background { background: url(design.jpg) repeat; background-position: middle; background-size: 100%;}
