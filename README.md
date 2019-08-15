@@ -6,6 +6,8 @@ This repository contains the my modded files to create a BombSquad game's server
 
 The files are updated regularly after every new release of the original BombSquad dedicated server files by Mr. Eric Froemling.
 
+### You may also use this Github repository as a template for the directory structure of your own repository for your modified BombSquad dedicated server files.
+
 ## Installation
 To use my modded BombSquad server scripts, just download the latest release of this repository according to the OS system on which you will create the server, and then follow the instructions in the README of the distribution which you cloned/downloaded.
 
