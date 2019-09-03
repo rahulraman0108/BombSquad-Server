@@ -1,7 +1,7 @@
 import bs
 import random
 import bsSpaz
-import Portal
+import objects as objs
 import BuddyBunny
 import SnoBallz
 import bsUtils
@@ -264,6 +264,7 @@ class Powerup(bs.Actor):
         mod = factory.model
         mScl = 1
         color = (1, 1, 1)
+        self.portal = None
         name = "none"
         if powerupType == 'tripleBombs':
             tex = factory.texBomb
@@ -323,7 +324,6 @@ class Powerup(bs.Actor):
 
         if len(position) != 3: raise Exception("expected 3 floats for position")
 
-        self.port = None
         self.node = bs.newNode('prop',
                                delegate=self,
                                attrs={'body': 'box',
@@ -385,6 +385,10 @@ class Powerup(bs.Actor):
             bs.gameTimer(defaultPowerupInterval - 1000,
                          bs.WeakCall(self.handleMessage, bs.DieMessage()))
 
+    def delete_portal(self):
+        if self.portal is not None and self.portal.exists():
+            self.portal.delete()
+
     @classmethod
     def getFactory(cls):
         """
@@ -431,18 +435,18 @@ class Powerup(bs.Actor):
                         self.handleMessage(bs.DieMessage())
                     elif self.powerupType == 'portal':
                         t = bsSpaz.gPowerupWearOffTime
-                        if self.node.position in Portal.lastpos:
-                            self.port = Portal.Portal(position1=None, r=0.9,
+                        if self.node.position in objs.lastpos:
+                            self.portal = objs.Portal(position1=None, r=0.9,
                                                       color=(random.random(), random.random(), random.random()),
                                                       activity=bs.getActivity())
-                            bs.gameTimer(t, bs.Call(self.delpor))
+                            bs.gameTimer(t, bs.Call(self.delete_portal))
                         else:
                             m = self.node.position
-                            Portal.lastpos.append(m)
-                            self.port = Portal.Portal(position1=self.node.position, r=0.9,
+                            objs.lastpos.append(m)
+                            self.portal = objs.Portal(position1=self.node.position, r=0.9,
                                                       color=(random.random(), random.random(), random.random()),
                                                       activity=bs.getActivity())
-                            bs.gameTimer(t, bs.Call(self.delpor))
+                            bs.gameTimer(t, bs.Call(self.delete_portal))
                         self._powersGiven = True
                         self.handleMessage(bs.DieMessage())
                     elif self.powerupType == "fly":

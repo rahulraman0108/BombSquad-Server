@@ -1,87 +1,29 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial scale=1"/><link rel="stylesheet" href="2.css"/><link rel="stylesheet" href="thegr8.css"/><title>#GREAT Players Stats</title>
-  <script>
-    function show(){
-  var value = document.getElementById("playerstoshow").value;
-  var table = document.getElementById("table");
-  var rows = table.getElementsByTagName("tr");
-  var boolv = Number.isInteger(parseInt(value));
-  if(boolv==true){
-    for (var i = 1; i < (rows.length); i++){
-      var row = document.getElementById(String(i));
-      row.style.display = "";
-      if(i>parseInt(value)){
-        row.style.display = "none";
-      }
-    }
-  }
-  alert("Upto "+String(value)+" number of row(s) of player stats table is/are shown.");
-}
-function search() {
-  var input, filter, table, tr, td, i, txtValue, value;
-  input = document.getElementById("searchInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("table");
-  tr = table.getElementsByTagName("tr");
-  value = document.getElementById("playerstoshow").value;
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[1];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        if(i>parseInt(value)){
-          tr[i].style.display = "none";
-        } else {
-          tr[i].style.display = "";
-        }
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
-  }
-}
-function gaccount(account) {
-  var inv, mhr;
-  inv = document.getElementById('inv');
-  mhr = new XMLHttpRequest();
-  mhr.onreadystatechange = function (e) {
-    if (mhr.readyState == 4 && mhr.status == 200) {
-      inv.innerHTML = mhr.responseText;
-      var account = document.getElementById(String(account));
-      if (account!=null) {
-        account.style.display = "";
-      }
-    }
-  }
-  mhr.open("GET", "43210I.html", true);
-  mhr.setRequestHeader('Content-type', 'text/html');
-  mhr.send();
-}
-function load(){
-  var url_string = window.location.href;
-  var url = new URL(url_string);
-  var account = url.searchParams.get("account");
-  if(String(account)!=="null"){
-    gaccount(String(account));
-  }
-}
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial scale=1"/>
+    <link rel="stylesheet" href="2.css"/>
+    <link rel="stylesheet" href="thegr8.css"/>
+    <title>Title</title>
 </head>
 
-<body onload="load()">
-<section width=100%><div width=100%>
-<center><img src="tg.png" WIDTH=50% HEIGHT=24% align="middle"></center>
+<body>
+<section>
+    <div>
+        <div class="no-limits"><b>Welcome, use the following links to got to different stats pages.</b><br>
+            <img alt="Intro image" src="teaser.png"
+                 style="alignment: center; align-content: center; height: 24%; width: 100%">
 
-<span style="font-size: 22px;background-color:lightblue;"><b>Join me: </b><a href="https://patreon.com/rahulraman"> Patreon ,</a>    <a href="https://discordapp.com/invite/BCZvf3W"> Discord ,</a>    <a href="https://www.youtube.com/channel/UCme4Yo-CHGvdBcgFv8rXomQ"> YouTube, </a>    <a href="http s://thegreat.ml/subscribe/"> My Email Newsletter, </a>    <a href="https://thegreat.ml/"> My Website </a></span>
-
-<b><p id="counter" class="counter"></p></b>
-
-<section id="inv" class="background">
+            <div style="font-size: 22px;background-color:lightblue;" class="dropdown">
+                <button class="dropbtn">Important links:</button>
+                <div class="dropdown-content">
+                    <!-- Add the links of the stats html files of your different parties and any other page you want below. -->
+                    <a href="example.html">your awesome party name</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
-<section id="full">
-</section>
-</div></section>
-<script>var countDownDate = new Date("Jun 30, 2019 24:00:00").getTime(); var x = setInterval(function() { var now = new Date().getTime(); var distance = countDownDate - now; var days = Math.floor(distance / (1000 * 60 * 60 * 24));  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));  document.getElementById("counter").innerHTML = "Season Ends In " + days + "Days " + hours + "Hrs ";  if (distance < 0) {  clearInterval(x); document.getElementById("counter").innerHTML = "Season Results"; } }, 1000); 
-</script></body>
+</body>
 </html>

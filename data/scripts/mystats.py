@@ -9,110 +9,151 @@ import settings
 port = 43210  # The port of your party in `bombsquad_server`
 partyName = settings.partyName  # The name of your party in `bombsquad_server`
 webServerRootDirectory = "/var/www/html/"  # The directory which is served by the web server on your system
-stats_file = bs.getEnvironment()['systemScriptsDirectory']+"/stats.json"  # Don't change
-mainHTMLFile = webServerRootDirectory + "index.html"  # Try not to use another name instead of index
+stats_file = bs.getEnvironment()['systemScriptsDirectory'] + "/stats.json"  # Don't change
+mainHTMLFile = webServerRootDirectory + str(port) + ".html"  # Don't change
 html2_file = webServerRootDirectory + str(port) + "I.html"  # Don't change
 botEnabled = settings.botFile  # Don't change
-bot_file = webServerRootDirectory + "bot.json"  # The name with extension of the .json file to be read by my discord bot
-html1_s = ("""<html lang="en">
+bot_file = webServerRootDirectory + str(port) + ".json"  # Don't change
+
+html1_start = """<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial scale=1"/>
-  <link rel="stylesheet" href="2.css"/><link rel="stylesheet" href="thegr8.css"/>
-  <title>Players Stats</title>
-  <script>
-    function show(){
-  var value = document.getElementById("playerstoshow").value;
-  var table = document.getElementById("table");
-  var rows = table.getElementsByTagName("tr");
-  var boolv = Number.isInteger(parseInt(value));
-  if(boolv==true){
-    for (var i = 1; i < (rows.length); i++){
-      var row = document.getElementById(String(i));
-      row.style.display = "";
-      if(i>parseInt(value)){
-        row.style.display = "none";
-      }
-    }
-  }
-  alert("Upto "+String(value)+" number of row(s) of player stats table is/are shown.");
-}
-function search() {
-  var input, filter, table, tr, td, i, txtValue, value;
-  input = document.getElementById("searchInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("table");
-  tr = table.getElementsByTagName("tr");
-  value = document.getElementById("playerstoshow").value;
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[1];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        if(i>parseInt(value)){
-          tr[i].style.display = "none";
-        } else {
-          tr[i].style.display = "";
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial scale=1"/>
+    <link rel="stylesheet" href="2.css"/>
+    <link rel="stylesheet" href="thegr8.css"/>
+    <title>"""+str(partyName)+""" Players Stats</title>
+    <script type="text/javascript">
+        function show() {
+            var value = document.getElementById("playerstoshow").value;
+            var table = document.getElementById("table");
+            var rows = table.getElementsByTagName("tr");
+            var boolv = Number.isInteger(parseInt(value));
+            if (boolv === true) {
+                for (var i = 1; i < (rows.length); i++) {
+                    var row = document.getElementById(String(i));
+                    row.style.display = "";
+                    if (i > parseInt(value)) {
+                        row.style.display = "none";
+                    }
+                }
+            }
+            alert("Upto " + String(value) + " number of row(s) of player stats table is/are shown.");
         }
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
-  }
-}
-function gaccount(account) {
-  var inv, mhr;
-  inv = document.getElementById('inv');
-  mhr = new XMLHttpRequest();
-  mhr.onreadystatechange = function (e) {
-    if (mhr.readyState == 4 && mhr.status == 200) {
-      inv.innerHTML = mhr.responseText;
-      var account = document.getElementById(String(account));
-      if (account!=null) {
-        account.style.display = "";
-      }
-    }
-  }
-  mhr.open("GET", '"""+str(port)+"""I.html", true);
-  mhr.setRequestHeader('Content-type', 'text/html');
-  mhr.send();
-}
-function load(){
-  var url_string = window.location.href;
-  var url = new URL(url_string);
-  var account = url.searchParams.get("account");
-  if(String(account)!=="null"){
-    gaccount(String(account));
-  }
-}
-  </script>
+
+        function search() {
+            var input, filter, table, tr, td, i, txtValue, value;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("table");
+            tr = table.getElementsByTagName("tr");
+            value = document.getElementById("playerstoshow").value;
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        if (i > parseInt(value)) {
+                            tr[i].style.display = "none";
+                        } else {
+                            tr[i].style.display = "";
+                        }
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function get_account(account) {
+            var inv, mhr;
+            inv = document.getElementById('inv');
+            mhr = new XMLHttpRequest();
+            mhr.onreadystatechange = function (e) {
+                if (mhr.readyState === 4 && mhr.status === 200) {
+                    inv.innerHTML = mhr.responseText;
+                    var account = document.getElementById(String(account));
+                    if (account != null) {
+                        account.style.display = "";
+                    }
+                }
+            };
+            mhr.open("GET", \"""" + str(port) + """I.html", true);
+            mhr.setRequestHeader('Content-type', 'text/html');
+            mhr.send();
+        }
+
+        function load() {
+            var url_string = window.location.href;
+            var url = new URL(url_string);
+            var account = url.searchParams.get("account");
+            if (String(account) !== "null") {
+                get_account(String(account));
+            }
+        }
+    </script>
 </head>
 
 <body onload="load()">
-<section width=100%><div width=100%>
-<center><img src="teaser.png" WIDTH=50% HEIGHT=24% align="middle"></center>
+<section>
+    <div>
+        <div class="no-limits"><b>""" + str(partyName) + """ party's player stats.</b><br>
+            <img alt="Intro image" src="teaser.png"
+                 style="alignment: center; align-content: center; height: 24%; width: 50%">
 
-<span style="font-size: 22px;background-color:lightblue;">
-<b>Join me: </b>
-<!-- Your links and buttons to be here -->
-</span>
+            <div style="font-size: 22px;background-color:lightblue;" class="dropdown">
+                <button class="dropbtn">Important links:</button>
+                <div class="dropdown-content">
+                    <a href="#"> Link 1</a>
+                    <a href="#"> Link 2</a>
+                    <a href="#"> Link 3</a>
+                    <a href="#"> Link 4</a>
+                    <a href="#"> Link 5 </a>
+                </div>
+            </div>
 
-<b><p id="counter" class="counter"></p></b>
+            <p id="counter" class="counter"></p></div>
 
-<section id="inv" class="background">
+        <section id="inv" class="background">
+        </section>
+        <section id="full">
+            <div style="background-color:lightblue">
+                <label for="playerstoshow">Number of rows of player of the following stats table to show:</label>
+                <input type="number" id="playerstoshow" onchange="show()" value="100"/>
+                <input type="text" id="searchInput" onkeyup="search()" placeholder="Search for names.."
+                       title="Type in a name">
+            </div>
+            <table class="background limit-min-max" id="table" style="width: 100%;">
+                <tr>
+                    <th><u>Rank</u></th>
+                    <th><u>Player</u></th>
+                    <th><u>Scores</u></th>
+                    <th><u>Avg<br>Score</u></th>
+                    <th><u>Kills</u></th>
+                    <th><u>K/D</u></th>
+                    <th><u>Deaths</u></th>
+                </tr>"""
+html1_end = """
+            </table>
+        </section>
+    </div>
 </section>
-<section id="full">
-<br>
-  <center>
-  <div style="background-color:lightblue"><b>`""" + str(partyName) + """` party's player stats.<br>
-    Number of rows of player of the following stats table to show:
-    </b><input type="number" id="playerstoshow" onchange="show()" value="100" />
-  <input type="text" id="searchInput" onkeyup="search()" placeholder="Search for names.." title="Type in a name"></div>
-  </center>
-<br>
-<table class="background" id="table" width=100%>
-<tr><th><u>Rank</u></th><th><u>Player</u></th><th><u>Scores</u></th><th><u>Avg<br>Score</u></th>""" +
-           """<th><u>Kills</u></th><th><u>K/D</u></th><th><u>Deaths</u></th></tr>\n""")
+<script type="text/javascript">
+    var countDownDate = new Date("Sep 31, 2019 24:00:00").getTime();
+    var x = setInterval(function () {
+        var now = new Date().getTime();
+        var distance = countDownDate - now;
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById("counter").innerHTML = "Season Ends In " + days + "Days " + hours + "Hrs ";
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("counter").innerHTML = "Season Results";
+        }
+    }, 1000);
+</script>
+</body>
+</html>"""
 
 
 def update(score_set):
@@ -277,13 +318,11 @@ class UpdateThread(threading.Thread):
         # this gives us a list of scores/names sorted high-to-low
         entries.sort(reverse=True)
         h1 = open(mainHTMLFile, "w")
-        h1.write(html1_s)
+        h1.write(html1_start)
         h2 = open(html2_file, "w")
         json_data = {}
         rank = 0
-        f = open(bs.getEnvironment()['systemScriptsDirectory'] + "/toppers.json", "w")
         toppers = {}
-        f2 = open(bs.getEnvironment()['systemScriptsDirectory'] + "/pStats.json", "w")
         pStats = {}
         for entry in entries:
             rank += 1
@@ -328,11 +367,11 @@ class UpdateThread(threading.Thread):
             h1.write(
                 "<tr id=\"" + str(rank) + "\"><td> #" + str(rank) + "</td><td><a href=\"?account=" + aid +
                 "\">" + str(name) + "</a></td><td>" + scores + "</td><td>" + str(
-                    int(scores) / int(games)) + "</td><td>" + kills + "</td><td>" + kd + "</td><td>" + deaths +
+                    int(scores) / int(games)) + "</td><td>" + kills + "</td><td>" + deaths + "</td><td>" + kd +
                 "</td></tr>\n")
             h2.write(
                 "<div id=\"" + aid + "\" style=\"display: none;background-color:lightblue;\"><center>" +
-                "<span><b>`"+ str(partyName) + "` party's player's individual stats.</b></span><br><strong>Rank: " +
+                "<span><b>`" + str(partyName) + "` party's player's individual stats.</b></span><br><strong>Rank: " +
                 "</strong>" + str(rank) + " <strong>Common name: </strong><a href=\"http://bombsquadgame.com/scores" +
                 "#profile?id=" + aid + "\">" + str(name) + "</a> <strong>Last used name: </strong>" + str(ln) + "<br>" +
                 "<strong>Games played: </strong>" + games + " <strong>Total score: </strong>" + scores + " <strong>" +
@@ -340,15 +379,14 @@ class UpdateThread(threading.Thread):
                 " <strong>Multi Kills Count: </strong>" + mkc + " <strong>Deaths: </strong>" + deaths + " <strong>" +
                 "Kills per deaths: </strong>" + kd + "<br><strong>Last character used: " + "</strong>" + lc +
                 "</center></div>")
-        h1.write("""</table></section>
-</div></section>
-<script>var countDownDate = new Date("Jun 30, 2019 24:00:00").getTime(); var x = setInterval(function() { var now = new Date().getTime(); var distance = countDownDate - now; var days = Math.floor(distance / (1000 * 60 * 60 * 24));  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));  document.getElementById("counter").innerHTML = "Season Ends In " + days + "Days " + hours + "Hrs ";  if (distance < 0) {  clearInterval(x); document.getElementById("counter").innerHTML = "Season Results"; } }, 1000); 
-</script></body>
-</html>""")
+
+        h1.write(html1_end)
         h1.close()
         h2.close()
+        f = open(bs.getEnvironment()['systemScriptsDirectory'] + "/toppers.json", "w")
         f.write(json.dumps(toppers))
         f.close()
+        f2 = open(bs.getEnvironment()['systemScriptsDirectory'] + "/pStats.json", "w")
         f2.write(json.dumps(pStats))
         f2.close()
         if botEnabled:
@@ -356,5 +394,5 @@ class UpdateThread(threading.Thread):
             b.write(json.dumps(json_data))
             b.close()
 
-        # aaand that's it!
+        # and that's it!
         print('Added ' + str(len(self._account_kills)) + ' account\'s stats entries.')

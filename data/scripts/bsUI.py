@@ -14,6 +14,7 @@ import weakref
 import bsServerData
 import threading
 import bsGame
+import settings
 
 uiGlobals = {'mainMenuWindow': None}
 
@@ -22698,8 +22699,9 @@ class PartyWindow(Window):
                     bs.Lstr(resource='internal.cantKickHostError'),
                     color=(1, 0, 0))
             else:
+                # Ban for 5 minutes.
                 result = bsInternal._disconnectClient(
-                    self._popupPartyMemberClientID)
+                    self._popupPartyMemberClientID, banTime=5*60)
                 if not result:
                     bs.playSound(bs.getSound('error'))
                     bs.screenMessage(
@@ -23857,6 +23859,27 @@ class StoreWindow(Window):
             self._onCloseCall()
 
 
+# Called for *all* chat messages while hosting.
+# Messages originating from the host will have clientID -1.
+# Should filter and return the string to be displayed,
+# or return None to ignore the message.
+def _filterChatMessage(msg, clientID):
+    if clientID == -1:
+        return msg
+    to_kick = False
+    for word in settings.filteredWords:
+        if word in str(msg):
+            msg = str(msg).replace(word, settings.replaceText)
+            to_kick = True
+    if not settings.showFilteredMessage:
+        msg = None
+    if to_kick:
+        if settings.kickAbusers:
+            bsInternal._disconnectClient(clientID, settings.abuserBanTiming * 1000)
+    return msg
+
+
+# Called for local chat messages when the party window is up.
 def _handleLocalChatMessage(msg):
     global gPartyWindow
     if gPartyWindow is not None and gPartyWindow() is not None:

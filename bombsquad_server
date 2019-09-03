@@ -89,6 +89,9 @@ config['autoBalanceTeams'] = True
 # your machine via ssh and running telnet to localhost from there.
 config['enableTelnet'] = False
 
+# Port used for telnet
+config['telnetPort'] = 43250
+
 # This can be None for no password but PLEASE do not expose that to the
 # world or your machine will likely get owned.
 config['telnetPassword'] = 'changeme'
@@ -166,6 +169,9 @@ while restart_server:
     else:
         bscfg = {}
     bscfg['Port'] = config['port']
+    bscfg['Enable Telnet'] = config['enableTelnet']
+    bscfg['Telnet Port'] = config['telnetPort']
+    bscfg['Telnet Password'] = config['telnetPassword']
     f = open('bscfg/config.json', 'w')
     f.write(json.dumps(bscfg))
     f.close()

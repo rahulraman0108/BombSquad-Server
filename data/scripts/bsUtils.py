@@ -4411,10 +4411,6 @@ def _configServer():
     # propogated to the server currently
     _setLanguage(config.get('language', 'English'))
 
-    bsInternal._setTelnetAccessEnabled(config.get('enableTelnet', False),
-                                       password=config.get('telnetPassword',
-                                                           None))
-
     bs.getConfig()['Auto Balance Teams'] = config.get('autoBalanceTeams', True)
 
     bsInternal._setPublicPartyMaxSize(config.get('maxPartySize', 9))

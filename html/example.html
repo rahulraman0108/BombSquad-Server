@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial scale=1"/>
+    <link rel="stylesheet" href="2.css"/>
+    <link rel="stylesheet" href="thegr8.css"/>
+    <title>PartyName's Players Stats</title>
+    <script type="text/javascript">
+        function show() {
+            var value = document.getElementById("playerstoshow").value;
+            var table = document.getElementById("table");
+            var rows = table.getElementsByTagName("tr");
+            var boolv = Number.isInteger(parseInt(value));
+            if (boolv === true) {
+                for (var i = 1; i < (rows.length); i++) {
+                    var row = document.getElementById(String(i));
+                    row.style.display = "";
+                    if (i > parseInt(value)) {
+                        row.style.display = "none";
+                    }
+                }
+            }
+            alert("Upto " + String(value) + " number of row(s) of player stats table is/are shown.");
+        }
+
+        function search() {
+            var input, filter, table, tr, td, i, txtValue, value;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("table");
+            tr = table.getElementsByTagName("tr");
+            value = document.getElementById("playerstoshow").value;
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        if (i > parseInt(value)) {
+                            tr[i].style.display = "none";
+                        } else {
+                            tr[i].style.display = "";
+                        }
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function get_account(account) {
+            var inv, mhr;
+            inv = document.getElementById('inv');
+            mhr = new XMLHttpRequest();
+            mhr.onreadystatechange = function (e) {
+                if (mhr.readyState === 4 && mhr.status === 200) {
+                    inv.innerHTML = mhr.responseText;
+                    var account = document.getElementById(String(account));
+                    if (account != null) {
+                        account.style.display = "";
+                    }
+                }
+            };
+            mhr.open("GET","exampleI.html", true);
+            mhr.setRequestHeader('Content-type', 'text/html');
+            mhr.send();
+        }
+
+        function load() {
+            var url_string = window.location.href;
+            var url = new URL(url_string);
+            var account = url.searchParams.get("account");
+            if (String(account) !== "null") {
+                get_account(String(account));
+            }
+        }
+    </script>
+</head>
+
+<body onload="load()">
+<section>
+    <div>
+        <div class="no-limits"><b>PartyName party's player stats.</b><br>
+            <img alt="Intro image" src="teaser.png"
+                 style="alignment: center; align-content: center; height: 24%; width: 50%">
+
+            <div style="font-size: 22px;background-color:lightblue;" class="dropdown">
+                <button class="dropbtn">Important links:</button>
+                <div class="dropdown-content">
+                    <a href="#"> Link 1</a>
+                    <a href="#"> Link 2</a>
+                    <a href="#"> Link 3</a>
+                    <a href="#"> Link 4</a>
+                    <a href="#"> Link 5 </a>
+                </div>
+            </div>
+
+            <p id="counter" class="counter"></p></div>
+
+        <section id="inv" class="background">
+        </section>
+        <section id="full">
+            <div style="background-color:lightblue">
+                <label for="playerstoshow">Number of rows of player of the following stats table to show:</label>
+                <input type="number" id="playerstoshow" onchange="show()" value="100"/>
+                <input type="text" id="searchInput" onkeyup="search()" placeholder="Search for names.."
+                       title="Type in a name">
+            </div>
+            <table class="background limit-min-max" id="table" style="width: 100%;">
+                <tr>
+                    <th><u>Rank</u></th>
+                    <th><u>Player</u></th>
+                    <th><u>Scores</u></th>
+                    <th><u>Avg<br>Score</u></th>
+                    <th><u>Kills</u></th>
+                    <th><u>Deaths</u></th>
+                    <th><u>K/D</u></th>
+                </tr>
+                <tr><td>1</td><td>Someone</td><td>1000</td><td>100</td><td>50</td><td>5</td><td>10</td></tr>
+            </table>
+        </section>
+    </div>
+</section>
+<script type="text/javascript">
+    var countDownDate = new Date("Sep 31, 2019 24:00:00").getTime();
+    var x = setInterval(function () {
+        var now = new Date().getTime();
+        var distance = countDownDate - now;
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById("counter").innerHTML = "Season Ends In " + days + "Days " + hours + "Hrs ";
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("counter").innerHTML = "Season Results";
+        }
+    }, 1000);
+</script>
+</body>
+</html>
