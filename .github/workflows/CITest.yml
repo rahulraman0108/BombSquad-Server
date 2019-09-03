@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - linux
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Update and upgrade system
+      run: |
+        sudo apt-get update
+        sudo apt-get upgrade
+    - name: Set up Python 2.7
+      run: sudo apt-get install python libsdl2-2.0-0 libpython2.7
+    - name: Making files executable
+      run: |
+        sudo chmod 777 bs_headless
+        sudo chmod 777 ciTest
+        sudo chmod 777 config.py
+    - name: Run the server build with timer to quit
+      run: ./ciTest
