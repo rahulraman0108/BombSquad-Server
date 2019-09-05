@@ -8,19 +8,22 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [2.7]
+
     steps:
     - uses: actions/checkout@v1
-    - name: Update and upgrade system
-      run: |
-        sudo apt-get update
-        sudo apt-get upgrade
-    - name: Set up Python 2.7
-      run: sudo apt-get install python libsdl2-2.0-0 libpython2.7
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
     - name: Making files executable
       run: |
-        sudo chmod 777 bs_headless
-        sudo chmod 777 ciTest
-        sudo chmod 777 config.py
-    - name: Run the server test build with timer to quit in it
-      run: ./ciTest
+        chmod 777 bs_headless
+        chmod 777 ciTest
+        chmod 777 config.py
+    - name: Start the test
+      run: |
+        ./ciTest
