@@ -1,5 +1,5 @@
 # BombSquad-Server
-### This branch is for the file for BombSquad game's server to be created on Linux.
+### This branch is for sharing the file for creating BombSquad game's dedicated server on Linux.
 
 ## Info
 This branch of this repository contains the my modded files to create a BombSquad game's servers on linux Ubuntu distributions.
