@@ -418,6 +418,7 @@ class FootballCoopGame(bs.CoopGameActivity):
 
             fp = bs.Vector(*self._flag.node.position)
             closestBot = None
+            closestLen = 9999
             for bot in bots:
                 # if a bot is picked up he should forget about the flag
                 if bot.heldCount > 0: continue

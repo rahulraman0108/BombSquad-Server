@@ -1,3 +1,5 @@
+import errno
+
 import bs
 import weakref
 import os

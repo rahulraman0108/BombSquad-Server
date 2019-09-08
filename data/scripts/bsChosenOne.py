@@ -262,7 +262,7 @@ class ChosenOneGame(bs.TeamGameActivity):
             import traceback
             print 'EXC in _setChosenOnePlayer'
             traceback.print_exc(e)
-            traceback, print_stack()
+            traceback.print_stack()
 
     def handleMessage(self, m):
         if isinstance(m, bs.PlayerSpazDeathMessage):

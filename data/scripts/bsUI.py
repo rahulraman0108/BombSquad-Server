@@ -11751,7 +11751,7 @@ class GameSettingsSelectWindow(Window):
         elif settingType == int:
             bs.textWidget(edit=ctrl, text=str(int(val)))
         else:
-            raise Exception('invalid vartype: '+str(vartype))
+            raise Exception('invalid vartype: '+str(settingType))
         self._settings[settingName] = val
 
 
@@ -18695,6 +18695,8 @@ class PurchaseWindow(Window):
             button=False)
         # wire up the parts we need..
         if self._isDouble:
+            offer = {}
+            realPrice = None
             self._plusText = bs.textWidget(
                 parent=self._rootWidget,
                 position=(self._width * 0.5, self._height * 0.5 + 50),
@@ -21978,15 +21980,6 @@ class GatherWindow(Window):
                 if existingSelection == (party['address'], 'name'):
                     bs.containerWidget(edit=columnWidget,
                                        selectedChild=party['nameWidget'])
-                if False:
-                    party['languageWidget'] = bs.textWidget(
-                        text=bs.Lstr(
-                            translate=('languages', party['language'])),
-                        parent=c, drawController=c, size=(0, 0),
-                        position=(sub_scroll_width * 0.73, 20),
-                        maxWidth=sub_scroll_width * 0.13, scale=0.7,
-                        color=(0.8, 0.8, 0.8),
-                        hAlign='center', vAlign='center')
                 if party['statsAddr'] != '':
                     url = party['statsAddr'].replace(
                         '${ACCOUNT}', bsInternal._getAccountMiscReadVal2(
