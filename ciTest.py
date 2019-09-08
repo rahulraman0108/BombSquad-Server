@@ -21,7 +21,7 @@ def test_func1():
         os.chdir(script_dir)
 
     config_path = './config.py'
-    binary_path = str(os.getcwd()) + "/bs_headless"
+    binary_path = "./bs_headless"
     if binary_path is None:
         raise Exception('unable to locate bs_headless binary')
 
