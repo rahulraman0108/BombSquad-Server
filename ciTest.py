@@ -21,15 +21,7 @@ def test_func1():
         os.chdir(script_dir)
 
     config_path = './config.py'
-    binary_path = None
-    if os.name == 'nt':
-        test_paths = 'bs_headless.exe', 'BombSquad.exe', 'BombSquad.exe'
-    else:
-        test_paths = './bs_headless', './bombsquad', './bombsquad'
-    for path in test_paths:
-        if os.path.exists(path):
-            binary_path = path
-            break
+    binary_path = str(os.getcwd()) + "\\bs_headless"
     if binary_path is None:
         raise Exception('unable to locate bs_headless binary')
 
