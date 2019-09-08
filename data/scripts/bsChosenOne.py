@@ -27,9 +27,9 @@ class ChosenOneGame(bs.TeamGameActivity):
 
     @classmethod
     def supportsSessionType(cls, sessionType):
-        return True if(
-            issubclass(sessionType, bs.TeamsSession)
-            or issubclass(sessionType, bs.FreeForAllSession)) else False
+        return True if (
+                issubclass(sessionType, bs.TeamsSession)
+                or issubclass(sessionType, bs.FreeForAllSession)) else False
 
     @classmethod
     def getSupportedMaps(cls, sessionType):
@@ -45,13 +45,13 @@ class ChosenOneGame(bs.TeamGameActivity):
                     'choices': [('None', 0), ('1 Minute', 60),
                                 ('2 Minutes', 120), ('5 Minutes', 300),
                                 ('10 Minutes', 600), ('20 Minutes', 1200)],
-                    'default':0
+                    'default': 0
                 }),
                 ("Respawn Times", {
                     'choices': [('Shorter', 0.25), ('Short', 0.5),
                                 ('Normal', 1.0), ('Long', 2.0),
                                 ('Longer', 4.0)],
-                    'default':1.0
+                    'default': 1.0
                 }),
                 ("Epic Mode", {'default': False})]
 
@@ -92,10 +92,10 @@ class ChosenOneGame(bs.TeamGameActivity):
     def onBegin(self):
 
         # test...
-        if not all(player.exists() for player in self.players):
-            bs.printError(
-                "Nonexistant player in onBegin: " +
-                str([str(p) for p in self.players]) + ': we are ' + str(player))
+        for player in self.players:
+            if not player.exists():
+                bs.printError(
+                    "Nonexistant player in onBegin: " + str([str(p) for p in self.players]) + ': we are ' + str(player))
 
         bs.TeamGameActivity.onBegin(self)
         self.setupStandardTimeLimit(self.settings['Time Limit'])
@@ -165,7 +165,7 @@ class ChosenOneGame(bs.TeamGameActivity):
                     player, 3, screenMessage=False, display=False)
 
                 scoringTeam.gameData['timeRemaining'] = max(
-                    0, scoringTeam.gameData['timeRemaining']-1)
+                    0, scoringTeam.gameData['timeRemaining'] - 1)
 
                 # show the count over their head
                 try:
@@ -251,7 +251,7 @@ class ChosenOneGame(bs.TeamGameActivity):
                                 attrs={"intensity": 0.6,
                                        "heightAttenuated": False,
                                        "volumeIntensityScale": 0.1, "radius":
-                                       0.13, "color": color}))
+                                           0.13, "color": color}))
 
                         bs.animate(l.node, 'intensity',
                                    {0: 1.0, 200: 0.4, 400: 1.0},
