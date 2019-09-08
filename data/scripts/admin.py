@@ -33,11 +33,9 @@ class PermissionEffect(object):
 
         def c():
             self.emit3()
-            self.ice_smoke()
 
         def d():
             self.emit4()
-            self.ice_smoke()
 
         # particles
         if particles:

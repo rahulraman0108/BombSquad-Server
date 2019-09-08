@@ -17,7 +17,7 @@ botFile = True  # Whether or not to generate the file to be read by my discord b
 
 partyName = "Someone's party"  # Type your party's name here.
 
-filteredWords = ["some", "words"]  # Some words to filter from the chat messages in the party.
+filteredWords = ["some****", "words****"]  # Some words to filter from the chat messages in the party.
 
 showFilteredMessage = True  # Whether to show the message containing restricted word after removing the word or not.
 
@@ -26,3 +26,20 @@ replaceText = "**RESTRICTED WORD FILTERED BY SERVER**"  # The string to replace 
 kickAbusers = False  # Whether to kick or not the players who use filtered words.
 
 abuserBanTiming = 300  # The time upto which the kicked abusers may not join the server after being kicked.
+
+showScoresInTopRightCorner = True
+
+showTextsInBottom = True
+
+gameTexts = ["Welcome to the server.", "This server uses TheGreat's latest server builds.",
+             "Chat messages are filtered,\nAbusers are kicked."]
+
+
+def return_yielded_game_texts():
+    for text in gameTexts:
+        yield text
+
+
+def return_players_yielded(bs):
+    for player in bs.getSession().players:
+        yield player

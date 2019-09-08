@@ -11,7 +11,6 @@ partyName = settings.partyName  # The name of your party in `bombsquad_server`
 webServerRootDirectory = "/var/www/html/"  # The directory which is served by the web server on your system
 stats_file = bs.getEnvironment()['systemScriptsDirectory'] + "/stats.json"  # Don't change
 mainHTMLFile = webServerRootDirectory + str(port) + ".html"  # Don't change
-html2_file = webServerRootDirectory + str(port) + "I.html"  # Don't change
 botEnabled = settings.botFile  # Don't change
 bot_file = webServerRootDirectory + str(port) + ".json"  # Don't change
 
@@ -22,7 +21,7 @@ html1_start = """<!DOCTYPE html>
     <meta name="viewport" content="width=device-width,initial scale=1"/>
     <link rel="stylesheet" href="2.css"/>
     <link rel="stylesheet" href="thegr8.css"/>
-    <title>"""+str(partyName)+""" Players Stats</title>
+    <title>""" + str(partyName) + """ Players Stats</title>
     <script type="text/javascript">
         function show() {
             var value = document.getElementById("playerstoshow").value;
@@ -64,37 +63,10 @@ html1_start = """<!DOCTYPE html>
                 }
             }
         }
-
-        function get_account(account) {
-            var inv, mhr;
-            inv = document.getElementById('inv');
-            mhr = new XMLHttpRequest();
-            mhr.onreadystatechange = function (e) {
-                if (mhr.readyState === 4 && mhr.status === 200) {
-                    inv.innerHTML = mhr.responseText;
-                    var account = document.getElementById(String(account));
-                    if (account != null) {
-                        account.style.display = "";
-                    }
-                }
-            };
-            mhr.open("GET", \"""" + str(port) + """I.html", true);
-            mhr.setRequestHeader('Content-type', 'text/html');
-            mhr.send();
-        }
-
-        function load() {
-            var url_string = window.location.href;
-            var url = new URL(url_string);
-            var account = url.searchParams.get("account");
-            if (String(account) !== "null") {
-                get_account(String(account));
-            }
-        }
     </script>
 </head>
 
-<body onload="load()">
+<body>
 <section>
     <div>
         <div class="no-limits"><b>""" + str(partyName) + """ party's player stats.</b><br>
@@ -102,36 +74,34 @@ html1_start = """<!DOCTYPE html>
                  style="alignment: center; align-content: center; height: 24%; width: 50%">
 
             <div style="font-size: 22px;background-color:lightblue;" class="dropdown">
-                <button class="dropbtn">Important links:</button>
+                <button class="dropbtn">Some important links:</button>
                 <div class="dropdown-content">
-                    <a href="#"> Link 1</a>
-                    <a href="#"> Link 2</a>
-                    <a href="#"> Link 3</a>
-                    <a href="#"> Link 4</a>
-                    <a href="#"> Link 5 </a>
+                  <a href="https://patreon.com/rahulraman">Patreon</a>
+                  <a href="https://discordapp.com/invite/BCZvf3W">Discord</a>
+                  <a href="https://www.youtube.com/channel/UCme4Yo-CHGvdBcgFv8rXomQ">YouTube</a>
+                  <a href="https://thegreat.ml/subscribe/">My Email Newsletter</a>
+                  <a href="https://thegreat.ml/">My Website</a>
                 </div>
             </div>
 
             <p id="counter" class="counter"></p></div>
 
-        <section id="inv" class="background">
-        </section>
         <section id="full">
-            <div style="background-color:lightblue">
+            <div style="background-color:lightblue" class="limit-min-max">
                 <label for="playerstoshow">Number of rows of player of the following stats table to show:</label>
                 <input type="number" id="playerstoshow" onchange="show()" value="100"/>
                 <input type="text" id="searchInput" onkeyup="search()" placeholder="Search for names.."
                        title="Type in a name">
             </div>
-            <table class="background limit-min-max" id="table" style="width: 100%;">
+            <table class="background" id="table" style="width: 100%;">
                 <tr>
                     <th><u>Rank</u></th>
                     <th><u>Player</u></th>
                     <th><u>Scores</u></th>
                     <th><u>Avg<br>Score</u></th>
                     <th><u>Kills</u></th>
-                    <th><u>K/D</u></th>
                     <th><u>Deaths</u></th>
+                    <th><u>K/D</u></th>
                 </tr>"""
 html1_end = """
             </table>
@@ -319,7 +289,6 @@ class UpdateThread(threading.Thread):
         entries.sort(reverse=True)
         h1 = open(mainHTMLFile, "w")
         h1.write(html1_start)
-        h2 = open(html2_file, "w")
         json_data = {}
         rank = 0
         toppers = {}
@@ -335,14 +304,8 @@ class UpdateThread(threading.Thread):
             games = str(entry[6])
             aid = str(entry[7])
             lc = str(entry[8])
-            if rank == 1:
-                toppers[str(aid)] = "1st Ranker\n"
-            elif rank == 2:
-                toppers[str(aid)] = "2nd Ranker\n"
-            elif rank == 3:
-                toppers[str(aid)] = "3rd Ranker\n"
-            elif rank < 6:
-                toppers[str(aid)] = (str(rank) + "th Ranker\n")
+            if rank < 11:
+                toppers[str(aid)] = ("#" + str(rank))
             pStats[str(aid)] = {"rank": str(rank),
                                 "scores": str(scores),
                                 "games": str(games),
@@ -364,25 +327,50 @@ class UpdateThread(threading.Thread):
                 kd = str(float(kills) / float(deaths))[:3]
             except Exception:
                 kd = "0"
+            try:
+                average_score = str(float(scores) / float(games))[:3]
+            except Exception:
+                average_score = "0"
             h1.write(
-                "<tr id=\"" + str(rank) + "\"><td> #" + str(rank) + "</td><td><a href=\"?account=" + aid +
-                "\">" + str(name) + "</a></td><td>" + scores + "</td><td>" + str(
-                    int(scores) / int(games)) + "</td><td>" + kills + "</td><td>" + deaths + "</td><td>" + kd +
-                "</td></tr>\n")
-            h2.write(
-                "<div id=\"" + aid + "\" style=\"display: none;background-color:lightblue;\"><center>" +
-                "<span><b>`" + str(partyName) + "` party's player's individual stats.</b></span><br><strong>Rank: " +
-                "</strong>" + str(rank) + " <strong>Common name: </strong><a href=\"http://bombsquadgame.com/scores" +
-                "#profile?id=" + aid + "\">" + str(name) + "</a> <strong>Last used name: </strong>" + str(ln) + "<br>" +
-                "<strong>Games played: </strong>" + games + " <strong>Total score: </strong>" + scores + " <strong>" +
-                "Average Score: </strong>" + str(int(scores) / int(games)) + "<br><strong>Kills: </strong>" + kills +
-                " <strong>Multi Kills Count: </strong>" + mkc + " <strong>Deaths: </strong>" + deaths + " <strong>" +
-                "Kills per deaths: </strong>" + kd + "<br><strong>Last character used: " + "</strong>" + lc +
-                "</center></div>")
+                "<tr id=\"" + str(rank) + "\"><td> #" + str(rank) + "</td><td>" +
+                """<div class="player limit-min-max" id=\"""" + aid + """\" aria-hidden="true">
+                            <div class="wrap"><a href=\"""" + aid + """\">""" + name + """</a></div>
+                            <div class="player-dialog">
+                                <div class="player-header"><a href="http://bombsquadgame.com/scores#profile?id=""" +
+                aid + """\">\"""" + name +
+                """\"</a><a href="#" class="btn-close" aria-hidden="true">×</a></div>
+                                <div class="player-body">
+                                    <div class="column">
+                                        <p class="profile">
+                                            <i><u>Rank:</u></i> """ + str(rank) +
+                """<br><i><u>Last used name:</u></i> """ + ln + """<br>
+                                            <i><u>Games played:</u></i> """ + games +
+                """<br><i><u>Total score:</u></i> """ + scores + """<br>
+                                            <i><u>Average Score:</u></i> """ + average_score +
+                """<br><i><u>Kills:</u></i> """ + kills + """<br>
+                                        </p>
+                                    </div>
+                                    <div class="column">
+                                        <p class="profile">
+                                            <i><u>Multi Kills Count:</u></i> """ + mkc +
+                """<br><i><u>Deaths:</u></i> """ + deaths + """<br><i><u>Kills per deaths:</u></i>""" +
+                kd + """<br><i><u>Last character used:</u></i> """ + lc + """
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="player-footer">
+                                    <a href="#"
+                                       style="background: #ffb84d; border: #ffb84d; border-radius: 8px;""" +
+                """ color: black; display: inline-block; font-size: 14px; padding: 8px 15px; text-decoration: none;"""
+                + """text-align: center; min-width: 60px; position: relative; transition: color .1s ease;">Close</a>
+                                </div>
+                            </div>
+                        </div>"""
+                + "</td><td>" + scores + "</td><td>" + average_score + "</td><td>" + kills +
+                "</td><td>" + deaths + "</td><td>" + kd + "</td></tr>\n")
 
         h1.write(html1_end)
         h1.close()
-        h2.close()
         f = open(bs.getEnvironment()['systemScriptsDirectory'] + "/toppers.json", "w")
         f.write(json.dumps(toppers))
         f.close()

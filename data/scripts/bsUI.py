@@ -23875,7 +23875,7 @@ def _filterChatMessage(msg, clientID):
         msg = None
     if to_kick:
         if settings.kickAbusers:
-            bsInternal._disconnectClient(clientID, settings.abuserBanTiming * 1000)
+            bsInternal._disconnectClient(clientID, settings.abuserBanTiming)
     return msg
 
 
