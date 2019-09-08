@@ -16,7 +16,7 @@ import pytest
 
 def test_func1():
     # we expect to be running from the dir where this script lives
-    script_dir = os.path.dirname(sys.argv[0])
+    script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
     if script_dir != '':
         os.chdir(script_dir)
 
