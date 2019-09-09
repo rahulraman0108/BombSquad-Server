@@ -2368,7 +2368,7 @@ class GameActivity(Activity):
                 if self.hasEnded():
                     bottom_text.handleMessage(bs.DieMessage())
 
-            bs.Timer(1000, check_end, repeat=True)
+            bs.Timer(2500, check_end, repeat=True)
         elif settings.showScoresInTopRightCorner and not settings.showTextsInBottom:
             scores_text = gameTexts.TopCornerScores()
 
@@ -2376,7 +2376,7 @@ class GameActivity(Activity):
                 if self.hasEnded():
                     scores_text.handleMessage(bs.DieMessage())
 
-            bs.Timer(1000, check_end, repeat=True)
+            bs.Timer(2500, check_end, repeat=True)
         elif settings.showTextsInBottom and settings.showScoresInTopRightCorner:
             bottom_text = gameTexts.BottomTexts()
             scores_text = gameTexts.TopCornerScores()
@@ -2386,7 +2386,7 @@ class GameActivity(Activity):
                     bottom_text.handleMessage(bs.DieMessage())
                     scores_text.handleMessage(bs.DieMessage())
 
-            bs.Timer(1000, check_end, repeat=True)
+            bs.Timer(2500, check_end, repeat=True)
 
         # report for analytics
         s = self.getSession()

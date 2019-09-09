@@ -66,7 +66,7 @@ html1_start = """<!DOCTYPE html>
     </script>
 </head>
 
-<body>
+<body onload="show()">
 <section>
     <div>
         <div class="no-limits"><b>""" + str(partyName) + """ party's player stats.</b><br>
@@ -98,10 +98,8 @@ html1_start = """<!DOCTYPE html>
                     <th><u>Rank</u></th>
                     <th><u>Player</u></th>
                     <th><u>Scores</u></th>
-                    <th><u>Avg<br>Score</u></th>
                     <th><u>Kills</u></th>
                     <th><u>Deaths</u></th>
-                    <th><u>K/D</u></th>
                 </tr>"""
 html1_end = """
             </table>
@@ -333,12 +331,12 @@ class UpdateThread(threading.Thread):
                 average_score = "0"
             h1.write(
                 "<tr id=\"" + str(rank) + "\"><td> #" + str(rank) + "</td><td>" +
-                """<div class="player limit-min-max" id=\"""" + aid + """\" aria-hidden="true">
-                            <div class="wrap"><a href=\"""" + aid + """\">""" + name + """</a></div>
-                            <div class="player-dialog">
+                """<div class="player" id=\"""" + aid + """\" aria-hidden="true">
+                            <div class="wrap"><a href=\"#""" + aid + """\">""" + name + """</a></div>
+                            <div class="player-data limit-min-max">
                                 <div class="player-header"><a href="http://bombsquadgame.com/scores#profile?id=""" +
-                aid + """\">\"""" + name +
-                """\"</a><a href="#" class="btn-close" aria-hidden="true">×</a></div>
+                aid + """\">""" + name +
+                """</a><a href="#" class="btn-close" aria-hidden="true">×</a></div>
                                 <div class="player-body">
                                     <div class="column">
                                         <p class="profile">
@@ -366,8 +364,7 @@ class UpdateThread(threading.Thread):
                                 </div>
                             </div>
                         </div>"""
-                + "</td><td>" + scores + "</td><td>" + average_score + "</td><td>" + kills +
-                "</td><td>" + deaths + "</td><td>" + kd + "</td></tr>\n")
+                + "</td><td>" + scores + "</td><td>" + kills + "</td><td>" + deaths + "</td></tr>\n")
 
         h1.write(html1_end)
         h1.close()

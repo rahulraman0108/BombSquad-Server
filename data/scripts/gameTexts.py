@@ -54,7 +54,11 @@ class TopCornerScores(bs.Actor):
         except StopIteration:
             self.players.close()
             self.players = settings.return_players_yielded(bs)
-            player = next(self.players)
+            try:
+                player = next(self.players)
+            except StopIteration:
+                self.node.text = ""
+                return
             aid = player.get_account_id()
             if str(aid) in self.stats:
                 player_stat = self.stats[str(aid)]
