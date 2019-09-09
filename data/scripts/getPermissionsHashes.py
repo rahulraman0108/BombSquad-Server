@@ -5,4 +5,4 @@ chutiya = ['\xee\x80\xb0Android ID', "\xee\x80\xa0Google play games ID", "\xee\x
 member = ['\xee\x80\xb0Android ID', "\xee\x80\xa0Google play games ID", "\xee\x80\xa0PC ID"]
 elder = ['\xee\x80\xb0Android ID', "\xee\x80\xa0Google play games ID", "\xee\x80\xa0PC ID"]
 owner = ['\xee\x80\xb0Android ID', "\xee\x80\xa0Google play games ID", "\xee\x80\xa0PC ID"]
-adminHashes = [['\xee\x80\xb0Android ID', "\xee\x80\xa0Google play games ID", "\xee\x80\xa0PC ID"]]
+adminHashes = ['\xee\x80\xb0Android ID', "\xee\x80\xa0Google play games ID", "\xee\x80\xa0PC ID"]

@@ -8,111 +8,120 @@ import settings
 
 port = 43210  # The port of your party in `bombsquad_server`
 partyName = settings.partyName  # The name of your party in `bombsquad_server`
-webServerRootDirectory = "C:\\"  # The directory which is served by the web server on your system
-stats_file = bs.getEnvironment()['systemScriptsDirectory']+"\\stats.json"  # Don't change
-mainHTMLFile = webServerRootDirectory + "index.html"  # Try not to use another name instead of index
-html2_file = webServerRootDirectory + str(port) + "I.html"  # Don't change
+webServerRootDirectory = "C:/my-site-folder/"  # The directory which is served by the web server on your system
+stats_file = bs.getEnvironment()['systemScriptsDirectory'] + "/stats.json"  # Don't change
+mainHTMLFile = webServerRootDirectory + str(port) + ".html"  # Don't change
 botEnabled = settings.botFile  # Don't change
-bot_file = webServerRootDirectory + "bot.json"  # The name with extension of the .json file to be read by my discord bot
-html1_s = ("""<html lang="en">
+bot_file = webServerRootDirectory + str(port) + ".json"  # Don't change
+
+html1_start = """<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial scale=1"/>
-  <link rel="stylesheet" href="2.css"/><link rel="stylesheet" href="thegr8.css"/>
-  <title>Players Stats</title>
-  <script>
-    function show(){
-  var value = document.getElementById("playerstoshow").value;
-  var table = document.getElementById("table");
-  var rows = table.getElementsByTagName("tr");
-  var boolv = Number.isInteger(parseInt(value));
-  if(boolv==true){
-    for (var i = 1; i < (rows.length); i++){
-      var row = document.getElementById(String(i));
-      row.style.display = "";
-      if(i>parseInt(value)){
-        row.style.display = "none";
-      }
-    }
-  }
-  alert("Upto "+String(value)+" number of row(s) of player stats table is/are shown.");
-}
-function search() {
-  var input, filter, table, tr, td, i, txtValue, value;
-  input = document.getElementById("searchInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("table");
-  tr = table.getElementsByTagName("tr");
-  value = document.getElementById("playerstoshow").value;
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[1];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        if(i>parseInt(value)){
-          tr[i].style.display = "none";
-        } else {
-          tr[i].style.display = "";
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial scale=1"/>
+    <link rel="stylesheet" href="2.css"/>
+    <link rel="stylesheet" href="thegr8.css"/>
+    <title>""" + str(partyName) + """ Players Stats</title>
+    <script type="text/javascript">
+        function show() {
+            var value = document.getElementById("playerstoshow").value;
+            var table = document.getElementById("table");
+            var rows = table.getElementsByTagName("tr");
+            var boolv = Number.isInteger(parseInt(value));
+            if (boolv === true) {
+                for (var i = 1; i < (rows.length); i++) {
+                    var row = document.getElementById(String(i));
+                    row.style.display = "";
+                    if (i > parseInt(value)) {
+                        row.style.display = "none";
+                    }
+                }
+            }
+            alert("Upto " + String(value) + " number of row(s) of player stats table is/are shown.");
         }
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
-  }
-}
-function gaccount(account) {
-  var inv, mhr;
-  inv = document.getElementById('inv');
-  mhr = new XMLHttpRequest();
-  mhr.onreadystatechange = function (e) {
-    if (mhr.readyState == 4 && mhr.status == 200) {
-      inv.innerHTML = mhr.responseText;
-      var account = document.getElementById(String(account));
-      if (account!=null) {
-        account.style.display = "";
-      }
-    }
-  }
-  mhr.open("GET", '"""+str(port)+"""I.html", true);
-  mhr.setRequestHeader('Content-type', 'text/html');
-  mhr.send();
-}
-function load(){
-  var url_string = window.location.href;
-  var url = new URL(url_string);
-  var account = url.searchParams.get("account");
-  if(String(account)!=="null"){
-    gaccount(String(account));
-  }
-}
-  </script>
+
+        function search() {
+            var input, filter, table, tr, td, i, txtValue, value;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("table");
+            tr = table.getElementsByTagName("tr");
+            value = document.getElementById("playerstoshow").value;
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        if (i > parseInt(value)) {
+                            tr[i].style.display = "none";
+                        } else {
+                            tr[i].style.display = "";
+                        }
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
-<body onload="load()">
-<section width=100%><div width=100%>
-<center><img src="teaser.png" WIDTH=50% HEIGHT=24% align="middle"></center>
+<body onload="show()">
+<section>
+    <div>
+        <div class="no-limits"><b>""" + str(partyName) + """ party's player stats.</b><br>
+            <img alt="Intro image" src="teaser.png"
+                 style="alignment: center; align-content: center; height: 24%; width: 50%">
 
-<span style="font-size: 22px;background-color:lightblue;">
-<b>Join me: </b>
-<!-- Your links and buttons to be here -->
-</span>
+            <div style="font-size: 22px;background-color:lightblue;" class="dropdown">
+                <button class="dropbtn">Some important links:</button>
+                <div class="dropdown-content">
+                  <a href="https://patreon.com/rahulraman">Patreon</a>
+                  <a href="https://discordapp.com/invite/BCZvf3W">Discord</a>
+                  <a href="https://www.youtube.com/channel/UCme4Yo-CHGvdBcgFv8rXomQ">YouTube</a>
+                  <a href="https://thegreat.ml/subscribe/">My Email Newsletter</a>
+                  <a href="https://thegreat.ml/">My Website</a>
+                </div>
+            </div>
 
-<b><p id="counter" class="counter"></p></b>
+            <p id="counter" class="counter"></p></div>
 
-<section id="inv" class="background">
+        <section id="full">
+            <div style="background-color:lightblue" class="limit-min-max">
+                <label for="playerstoshow">Number of rows of player of the following stats table to show:</label>
+                <input type="number" id="playerstoshow" onchange="show()" value="100"/>
+                <input type="text" id="searchInput" onkeyup="search()" placeholder="Search for names.."
+                       title="Type in a name">
+            </div>
+            <table class="background" id="table" style="width: 100%;">
+                <tr>
+                    <th><u>Rank</u></th>
+                    <th><u>Player</u></th>
+                    <th><u>Scores</u></th>
+                    <th><u>Kills</u></th>
+                    <th><u>Deaths</u></th>
+                </tr>"""
+html1_end = """
+            </table>
+        </section>
+    </div>
 </section>
-<section id="full">
-<br>
-  <center>
-  <div style="background-color:lightblue"><b>`""" + str(partyName) + """` party's player stats.<br>
-    Number of rows of player of the following stats table to show:
-    </b><input type="number" id="playerstoshow" onchange="show()" value="100" />
-  <input type="text" id="searchInput" onkeyup="search()" placeholder="Search for names.." title="Type in a name"></div>
-  </center>
-<br>
-<table class="background" id="table" width=100%>
-<tr><th><u>Rank</u></th><th><u>Player</u></th><th><u>Scores</u></th><th><u>Avg<br>Score</u></th>""" +
-           """<th><u>Kills</u></th><th><u>K/D</u></th><th><u>Deaths</u></th></tr>\n""")
+<script type="text/javascript">
+    var countDownDate = new Date("Sep 31, 2019 24:00:00").getTime();
+    var x = setInterval(function () {
+        var now = new Date().getTime();
+        var distance = countDownDate - now;
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById("counter").innerHTML = "Season Ends In " + days + "Days " + hours + "Hrs ";
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("counter").innerHTML = "Season Results";
+        }
+    }, 1000);
+</script>
+</body>
+</html>"""
 
 
 def update(score_set):
@@ -277,13 +286,10 @@ class UpdateThread(threading.Thread):
         # this gives us a list of scores/names sorted high-to-low
         entries.sort(reverse=True)
         h1 = open(mainHTMLFile, "w")
-        h1.write(html1_s)
-        h2 = open(html2_file, "w")
+        h1.write(html1_start)
         json_data = {}
         rank = 0
-        f = open(bs.getEnvironment()['systemScriptsDirectory'] + "/toppers.json", "w")
         toppers = {}
-        f2 = open(bs.getEnvironment()['systemScriptsDirectory'] + "/pStats.json", "w")
         pStats = {}
         for entry in entries:
             rank += 1
@@ -296,14 +302,8 @@ class UpdateThread(threading.Thread):
             games = str(entry[6])
             aid = str(entry[7])
             lc = str(entry[8])
-            if rank == 1:
-                toppers[str(aid)] = "1st Ranker\n"
-            elif rank == 2:
-                toppers[str(aid)] = "2nd Ranker\n"
-            elif rank == 3:
-                toppers[str(aid)] = "3rd Ranker\n"
-            elif rank < 6:
-                toppers[str(aid)] = (str(rank) + "th Ranker\n")
+            if rank < 11:
+                toppers[str(aid)] = ("#" + str(rank))
             pStats[str(aid)] = {"rank": str(rank),
                                 "scores": str(scores),
                                 "games": str(games),
@@ -325,30 +325,53 @@ class UpdateThread(threading.Thread):
                 kd = str(float(kills) / float(deaths))[:3]
             except Exception:
                 kd = "0"
+            try:
+                average_score = str(float(scores) / float(games))[:3]
+            except Exception:
+                average_score = "0"
             h1.write(
-                "<tr id=\"" + str(rank) + "\"><td> #" + str(rank) + "</td><td><a href=\"?account=" + aid +
-                "\">" + str(name) + "</a></td><td>" + scores + "</td><td>" + str(
-                    int(scores) / int(games)) + "</td><td>" + kills + "</td><td>" + kd + "</td><td>" + deaths +
-                "</td></tr>\n")
-            h2.write(
-                "<div id=\"" + aid + "\" style=\"display: none;background-color:lightblue;\"><center>" +
-                "<span><b>`"+ str(partyName) + "` party's player's individual stats.</b></span><br><strong>Rank: " +
-                "</strong>" + str(rank) + " <strong>Common name: </strong><a href=\"http://bombsquadgame.com/scores" +
-                "#profile?id=" + aid + "\">" + str(name) + "</a> <strong>Last used name: </strong>" + str(ln) + "<br>" +
-                "<strong>Games played: </strong>" + games + " <strong>Total score: </strong>" + scores + " <strong>" +
-                "Average Score: </strong>" + str(int(scores) / int(games)) + "<br><strong>Kills: </strong>" + kills +
-                " <strong>Multi Kills Count: </strong>" + mkc + " <strong>Deaths: </strong>" + deaths + " <strong>" +
-                "Kills per deaths: </strong>" + kd + "<br><strong>Last character used: " + "</strong>" + lc +
-                "</center></div>")
-        h1.write("""</table></section>
-</div></section>
-<script>var countDownDate = new Date("Jun 30, 2019 24:00:00").getTime(); var x = setInterval(function() { var now = new Date().getTime(); var distance = countDownDate - now; var days = Math.floor(distance / (1000 * 60 * 60 * 24));  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));  document.getElementById("counter").innerHTML = "Season Ends In " + days + "Days " + hours + "Hrs ";  if (distance < 0) {  clearInterval(x); document.getElementById("counter").innerHTML = "Season Results"; } }, 1000); 
-</script></body>
-</html>""")
+                "<tr id=\"" + str(rank) + "\"><td> #" + str(rank) + "</td><td>" +
+                """<div class="player" id=\"""" + aid + """\" aria-hidden="true">
+                            <div class="wrap"><a href=\"#""" + aid + """\">""" + name + """</a></div>
+                            <div class="player-data limit-min-max">
+                                <div class="player-header"><a href="http://bombsquadgame.com/scores#profile?id=""" +
+                aid + """\">""" + name +
+                """</a><a href="#" class="btn-close" aria-hidden="true">×</a></div>
+                                <div class="player-body">
+                                    <div class="column">
+                                        <p class="profile">
+                                            <i><u>Rank:</u></i> """ + str(rank) +
+                """<br><i><u>Last used name:</u></i> """ + ln + """<br>
+                                            <i><u>Games played:</u></i> """ + games +
+                """<br><i><u>Total score:</u></i> """ + scores + """<br>
+                                            <i><u>Average Score:</u></i> """ + average_score +
+                """<br><i><u>Kills:</u></i> """ + kills + """<br>
+                                        </p>
+                                    </div>
+                                    <div class="column">
+                                        <p class="profile">
+                                            <i><u>Multi Kills Count:</u></i> """ + mkc +
+                """<br><i><u>Deaths:</u></i> """ + deaths + """<br><i><u>Kills per deaths:</u></i>""" +
+                kd + """<br><i><u>Last character used:</u></i> """ + lc + """
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="player-footer">
+                                    <a href="#"
+                                       style="background: #ffb84d; border: #ffb84d; border-radius: 8px;""" +
+                """ color: black; display: inline-block; font-size: 14px; padding: 8px 15px; text-decoration: none;"""
+                + """text-align: center; min-width: 60px; position: relative; transition: color .1s ease;">Close</a>
+                                </div>
+                            </div>
+                        </div>"""
+                + "</td><td>" + scores + "</td><td>" + kills + "</td><td>" + deaths + "</td></tr>\n")
+
+        h1.write(html1_end)
         h1.close()
-        h2.close()
+        f = open(bs.getEnvironment()['systemScriptsDirectory'] + "/toppers.json", "w")
         f.write(json.dumps(toppers))
         f.close()
+        f2 = open(bs.getEnvironment()['systemScriptsDirectory'] + "/pStats.json", "w")
         f2.write(json.dumps(pStats))
         f2.close()
         if botEnabled:
@@ -356,5 +379,5 @@ class UpdateThread(threading.Thread):
             b.write(json.dumps(json_data))
             b.close()
 
-        # aaand that's it!
+        # and that's it!
         print('Added ' + str(len(self._account_kills)) + ' account\'s stats entries.')

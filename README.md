@@ -1,10 +1,10 @@
 # BombSquad-Server
-### This branch is for the file for BombSquad game's server to be created on Windows.
+### This branch is for sharing the file for creating BombSquad game's dedicated server on Windows.
 
 ## Info
-This branch of this repository contains the my modded files to create a BombSquad game's servers on Windows based systems.
+This branch of this repository contains the my modded files to create a BombSquad game's servers on windows Ubuntu distributions.
 
-The files are updated regularly after every new release of the original BombSquad dedicated server for linux files by Mr. Eric Froemling.
+The files are updated regularly after every new release of the original BombSquad dedicated server for windows files by Mr. Eric Froemling.
 
 ## Installation
 ### Setting up
@@ -15,32 +15,11 @@ Do your necessary server config edits in the `bombsquad_server.py`, then open `d
 (IMPORTANT) Cut and paste the files in the `html` folder to your web server root directory which you will use for your stats site to show, else the stats site won't work as expected.
 
 ### Launching
-After you are ready to launch the server just double click and run the `launch_bombsquad_server.bat` file.
+After you are ready to launch the server, just run the `launch_bombsquad_server.bat`
 
 And done, your server will be online and available to join, if you encounter any problem, you may create an issue in this repository.
 
-### Youtube video for the installation is coming soon.
-
-## Important things to keep in mind:
-- If you want a custom playlist then make and export the playlist only from the latest BombSquad game version
-- Do not add any other map in the playlist which is not present in the server files.
-- Also, please try not to include all same games in a playlist at least use two different games in a playlist.
-
-## New Features
-- Terminal Commands (Full server configuration's and players' control in shortcut with just using the command line terminal)
-- Owners, co-leaders, admins, etc
-- Any player can get his/her stats just by sending `/stats` in the server chat
-- Special prefixes for top 5 scorers
-- 3D flying maps, also 3D flying powerup for non 3D fly maps
-- Many new custom characters available for everyone with the my characters mod
-- More powerups
-- New minigames
-- Names on powerups
-- Shield of powerups
-- Disco lights on powerups
-- A cool totally static and fully customizable stats site generator with the ability to chose number of rows to show and search players in the table in the stats site, also a .json file to be read by my discord bot which you can use in discord channels to get your server's players stats
-- Notification when any player joins or leaves
-- All options can be turned on or off in `data/scripts/settings.py`
+<a href="https://youtu.be/3bA1mUAgMcw"><img style="alignment: center; align-content: center;" src="https://repository-images.githubusercontent.com/201241095/a3552300-bf52-11e9-9e4b-de5a2af1553a" alt="Installation video" width="50%" /></a>
 
 ## Error
 If you find any type of bug, or error in the files and you are sure that is not due to any of your edits, then you may create a issue in this repository, I will look on the issue and will try to fix it.
@@ -51,3 +30,5 @@ Every users interested in contributing to this repository and the files are most
 
 ## License
 This project is under `GNU GENERAL PUBLIC LICENSE Version 2`, check [every details about the license]( https://github.com/I-Am-The-Great/BombSquad-Server/blob/master/LICENSE).
+
+## For additional more information please refer to the [wiki pages](https://www.github.com/I-Am-The-Great/BombSquad-Server/wiki).

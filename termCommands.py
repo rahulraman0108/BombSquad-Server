@@ -131,7 +131,7 @@ oohRecurce(int(""" + str(s) + """))\n""")
             say = ""
             for i in range(args):
                 say += str(args[i])
-            self.stdin.write("bsInternal._chatMessage('"+str(say)+"')\n")
+            self.stdin.write("bsInternal._chatMessage('" + str(say) + "')\n")
             self.stdin.flush()
         elif command == '/freeze':
             if not args:
@@ -504,7 +504,7 @@ exec(c)\n""")
             else:
                 self.stdin.write("""c = '''s = bsInternal._getForegroundHostSession()""" +
                                  """\\nfor i in s.players[int(""" + str(
-                                    args[0]) + """)].getInputDevice()._getPlayerProfiles():""" +
+                    args[0]) + """)].getInputDevice()._getPlayerProfiles():""" +
                                  """\\n    try:""" +
                                  """\\n        print(i)""" +
                                  """\\n    except:""" +
@@ -550,7 +550,7 @@ exec(c)\n""")
             else:
                 self.stdin.write("""c = '''try:""" +
                                  """\\n    bsInternal._getForegroundHostSession()._maxPlayers = int(""" + str(
-                                    args[0]) + """)""" +
+                    args[0]) + """)""" +
                                  """\\n    bsInternal._setPublicPartyMaxSize(int(""" + str(args[0]) + """))""" +
                                  """\\n    print('Players limit set to ' + str(int(""" + str(args[0]) + """)))""" +
                                  """\\nexcept:""" +

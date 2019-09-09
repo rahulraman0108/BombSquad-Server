@@ -1,3 +1,5 @@
+import errno
+
 import bs
 import weakref
 import os
@@ -4410,10 +4412,6 @@ def _configServer():
     # FIXME - subsequent changes to this dont get
     # propogated to the server currently
     _setLanguage(config.get('language', 'English'))
-
-    bsInternal._setTelnetAccessEnabled(config.get('enableTelnet', False),
-                                       password=config.get('telnetPassword',
-                                                           None))
 
     bs.getConfig()['Auto Balance Teams'] = config.get('autoBalanceTeams', True)
 

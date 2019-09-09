@@ -14,6 +14,7 @@ import weakref
 import bsServerData
 import threading
 import bsGame
+import settings
 
 uiGlobals = {'mainMenuWindow': None}
 
@@ -11750,7 +11751,7 @@ class GameSettingsSelectWindow(Window):
         elif settingType == int:
             bs.textWidget(edit=ctrl, text=str(int(val)))
         else:
-            raise Exception('invalid vartype: '+str(vartype))
+            raise Exception('invalid vartype: '+str(settingType))
         self._settings[settingName] = val
 
 
@@ -18694,6 +18695,8 @@ class PurchaseWindow(Window):
             button=False)
         # wire up the parts we need..
         if self._isDouble:
+            offer = {}
+            realPrice = None
             self._plusText = bs.textWidget(
                 parent=self._rootWidget,
                 position=(self._width * 0.5, self._height * 0.5 + 50),
@@ -21977,15 +21980,6 @@ class GatherWindow(Window):
                 if existingSelection == (party['address'], 'name'):
                     bs.containerWidget(edit=columnWidget,
                                        selectedChild=party['nameWidget'])
-                if False:
-                    party['languageWidget'] = bs.textWidget(
-                        text=bs.Lstr(
-                            translate=('languages', party['language'])),
-                        parent=c, drawController=c, size=(0, 0),
-                        position=(sub_scroll_width * 0.73, 20),
-                        maxWidth=sub_scroll_width * 0.13, scale=0.7,
-                        color=(0.8, 0.8, 0.8),
-                        hAlign='center', vAlign='center')
                 if party['statsAddr'] != '':
                     url = party['statsAddr'].replace(
                         '${ACCOUNT}', bsInternal._getAccountMiscReadVal2(
@@ -22698,8 +22692,9 @@ class PartyWindow(Window):
                     bs.Lstr(resource='internal.cantKickHostError'),
                     color=(1, 0, 0))
             else:
+                # Ban for 5 minutes.
                 result = bsInternal._disconnectClient(
-                    self._popupPartyMemberClientID)
+                    self._popupPartyMemberClientID, banTime=5*60)
                 if not result:
                     bs.playSound(bs.getSound('error'))
                     bs.screenMessage(
@@ -23857,6 +23852,27 @@ class StoreWindow(Window):
             self._onCloseCall()
 
 
+# Called for *all* chat messages while hosting.
+# Messages originating from the host will have clientID -1.
+# Should filter and return the string to be displayed,
+# or return None to ignore the message.
+def _filterChatMessage(msg, clientID):
+    if clientID == -1:
+        return msg
+    to_kick = False
+    for word in settings.filteredWords:
+        if word in str(msg):
+            msg = str(msg).replace(word, settings.replaceText)
+            to_kick = True
+    if not settings.showFilteredMessage:
+        msg = None
+    if to_kick:
+        if settings.kickAbusers:
+            bsInternal._disconnectClient(clientID, settings.abuserBanTiming)
+    return msg
+
+
+# Called for local chat messages when the party window is up.
 def _handleLocalChatMessage(msg):
     global gPartyWindow
     if gPartyWindow is not None and gPartyWindow() is not None:

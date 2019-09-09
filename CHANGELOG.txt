@@ -1,3 +1,12 @@
+### 1.4.150 (14369)
+- Telnet port can now be specified in the config
+- Telnet socket no longer opens on headless build when telnet access is off (reduces DoS attack potential)
+- Added a _filterChatMessage() call which can be used by servers to intercept/modify/block all chat messages.
+- bsInternal._disconnectClient() now takes an optional banTime arg (in seconds, defaults to old value of 300).
+
+### 1.4.149 (14368)
+- Minor logging tweaks to debug server hangs
+
 ### 1.4.148 (14365)
 - Added a password option for telnet access on server builds
 - (internal) Disabled connect call in headless builds to hinder spam-bots

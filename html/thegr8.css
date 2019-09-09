@@ -1,20 +1,215 @@
-@font-face { font-family: bs; src: url("font1.ttf");}* { font-family: bs; }
-table.background { background: url(design.jpg) repeat; background-position: middle; background-size: 100%;}
-p.counter {text-align: center; font-size: 22px; margin-top: 0px; color: #d8d8cd;}
-body {background-color: #efb54a;}
-table {border: none; width: 100%; }
-table {font-family: arial, sans-serif;border-collapse: collapse;width: 100%; table-layout: fixed;}
-td, th {border-bottom: 1px solid #cee285;text-align: left;padding: 8px;}
-
-#searchInput {
-  background-image: url('searchicon.png');
-  background-position: 10px 10px;
-  background-repeat: no-repeat;
-  width: 100%;
-  font-size: 16px;
-  padding: 12px 20px 12px 40px;
-  border: 1px solid #ddd;
-  margin-bottom: 12px;
+@font-face {
+    font-family: bs;
+    src: url("font1.ttf");
 }
 
-section.background { background: url(design.jpg) repeat; background-position: middle; background-size: 100%;}
+* {
+    font-family: bs, serif;
+}
+
+table.background {
+    background: url(design.jpg) repeat center center;
+    background-size: 100%;
+}
+
+p.counter {
+    text-align: center;
+    font-size: 22px;
+    margin-top: 0;
+    color: #d8d8cd;
+}
+
+body {
+    background-color: #efb54a;
+}
+
+table {
+    border: none;
+    width: 100%;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+td, th {
+    border-bottom: 1px solid #cee285;
+    text-align: left;
+    padding: 8px;
+}
+
+#searchInput {
+    background-image: url('searchicon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+section.background {
+    background: url(design.jpg) repeat center center;
+    background-size: 100%;
+}
+
+.no-limits {
+    font-size: 3.5vw;
+}
+
+.limit-min {
+    font-size: 3.5vw;
+}
+
+@media (max-width: 667px) {
+    .limit-min {
+        font-size: 20px;
+    }
+}
+
+.limit-min-max {
+    font-size: 3.5vw;
+}
+
+@media (max-width: 667px) {
+    .limit-min-max {
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 1667px) {
+    .limit-min-max {
+        font-size: 35px;
+    }
+}
+
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    border: none;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+
+.player:before {
+    content: "";
+    display: none;
+    background: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}
+
+.player:target:before {
+    display: block;
+}
+
+.player:target .player-dialog {
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+    top: 20%;
+}
+
+.player-data {
+    background: url("design.jpg") center;
+    background-size: 100%;
+    border: #333333 solid 1px;
+    border-radius: 5px;
+    margin-top: -100px;
+    position: fixed;
+    left: 10%;
+    top: -180%;
+    z-index: 11;
+    width: 80%;
+    -webkit-transform: translate(0, -500%);
+    -ms-transform: translate(0, -500%);
+    transform: translate(0, -500%);
+    -webkit-transition: -webkit-transform 0.3s ease-out;
+    -moz-transition: -moz-transform 0.3s ease-out;
+    -o-transition: -o-transform 0.3s ease-out;
+    transition: transform 0.3s ease-out;
+}
+
+.player-body {
+    padding: 20px;
+}
+
+.player-header, .player-footer {
+    padding: 10px 20px;
+}
+
+.player-header {
+    border-bottom: 00px solid #1700ff;
+}
+
+.player-header h2 {
+    font-size: 20px;
+}
+
+.player-footer {
+    border-top: #eeeeee solid 0;
+    text-align: right;
+    margin-bottom: -1px;
+}
+
+.column {
+    width: 50%;
+    float: left
+}
+
+.btn-close {
+    color: #aaaaaa;
+    font-size: 30px;
+    text-decoration: none;
+    position: absolute;
+    right: 5px;
+    top: 0;
+}
+
+.btn-close:hover {
+    color: #919191;
+}
+
+.profile {
+    margin-bottom: 20px;
+}

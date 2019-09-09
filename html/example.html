@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial scale=1"/>
+    <link rel="stylesheet" href="2.css"/>
+    <link rel="stylesheet" href="thegr8.css"/>
+    <title>PartyName's Players Stats</title>
+    <script type="text/javascript">
+        function show() {
+            let value = document.getElementById("playerstoshow").value;
+            let table = document.getElementById("table");
+            let rows = table.getElementsByTagName("tr");
+            let boolv = Number.isInteger(parseInt(value));
+            if (boolv === true) {
+                for (let i = 1; i < (rows.length); i++) {
+                    let row = document.getElementById(String(i));
+                    row.style.display = "";
+                    if (i > parseInt(value)) {
+                        row.style.display = "none";
+                    }
+                }
+            }
+            alert("Upto " + String(value) + " number of row(s) of player stats table is/are shown.");
+        }
+
+        function search() {
+            let input, filter, table, tr, td, i, txtValue, value;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("table");
+            tr = table.getElementsByTagName("tr");
+            value = document.getElementById("playerstoshow").value;
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        if (i > parseInt(value)) {
+                            tr[i].style.display = "none";
+                        } else {
+                            tr[i].style.display = "";
+                        }
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+<section>
+    <div>
+        <div class="no-limits"><b>PartyName party's player stats.</b><br>
+            <img alt="Intro image" src="teaser.png"
+                 style="alignment: center; align-content: center; height: 24%; width: 50%">
+
+            <div style="font-size: 22px;background-color:lightblue;" class="dropdown">
+                <button class="dropbtn">Important links:</button>
+                <div class="dropdown-content">
+                    <a href="#"> Link 1</a>
+                    <a href="#"> Link 2</a>
+                    <a href="#"> Link 3</a>
+                    <a href="#"> Link 4</a>
+                    <a href="#"> Link 5 </a>
+                </div>
+            </div>
+
+            <p id="counter" class="counter"></p></div>
+
+        <section id="full">
+            <div style="background-color:lightblue">
+                <label for="playerstoshow">Number of rows of player of the following stats table to show:</label>
+                <input type="number" id="playerstoshow" onchange="show()" value="100"/>
+                <input type="text" id="searchInput" onkeyup="search()" placeholder="Search for names.."
+                       title="Type in a name">
+            </div>
+            <table class="background limit-min-max" id="table" style="width: 100%;">
+                <tr>
+                    <th><u>Rank</u></th>
+                    <th><u>Player</u></th>
+                    <th><u>Scores</u></th>
+                    <th><u>Avg<br>Score</u></th>
+                    <th><u>Kills</u></th>
+                    <th><u>Deaths</u></th>
+                    <th><u>K/D</u></th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>
+                        <div class="player limit-min-max" id="id" aria-hidden="true">
+                            <div class="wrap"><a href="#id">Someone</a></div>
+                            <div class="player-dialog">
+                                <div class="player-header"><a href="http://bombsquadgame.com/scores">name</a><a
+                                        href="#" class="btn-close" aria-hidden="true">×</a></div>
+                                <div class="player-body">
+                                    <div class="column">
+                                        <p class="profile">
+                                            <i><u>Rank:</u></i> 1<br><i><u>Last used name:</u></i> lName<br><i><u>Games played:</u></i>
+                                            100<br><i><u>Total score:</u></i>
+                                            1000<br><i><u>Average Score:</u></i> 10<br><i><u>Kills:</u></i> 5<br>
+                                        </p>
+                                    </div>
+                                    <div class="column">
+                                        <p class="profile">
+                                            <i><u>Multi Kills Count:</u></i> 3<br><i><u>Deaths:</u></i> 10<br><i><u>Kills per deaths:</u></i>
+                                            0.5<br><i><u>Last character used:</u></i> spaz
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="player-footer">
+                                    <a href="#"
+                                       style="background: #ffb84d; border: #ffb84d; border-radius: 8px; color: black; display: inline-block; font-size: 14px; padding: 8px 15px; text-decoration: none; text-align: center; min-width: 60px; position: relative; transition: color .1s ease;">Close</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>1000</td>
+                    <td>100</td>
+                    <td>50</td>
+                    <td>5</td>
+                    <td>10</td>
+                </tr>
+            </table>
+        </section>
+    </div>
+</section>
+<script type="text/javascript">
+    let countDownDate = new Date("Sep 31, 2019 24:00:00").getTime();
+    let x = setInterval(function () {
+        let now = new Date().getTime();
+        let distance = countDownDate - now;
+        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById("counter").innerHTML = "Season Ends In " + days + "Days " + hours + "Hrs ";
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("counter").innerHTML = "Season Results";
+        }
+    }, 1000);
+</script>
+</body>
+</html>

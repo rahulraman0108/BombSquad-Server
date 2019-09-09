@@ -427,10 +427,8 @@ class SnowStormGame(bs.TeamGameActivity):
             bs.gameTimer(850, self._precipitate)
         elif self.timesPrecipitated < 21:
             bs.gameTimer(700, self._precipitate)
-        elif self.timesPrecipitated < 23:
-            bs.gameTimer(500, self._precipitate)
         else:
-            bs.gameTimer(150, self._precipitate)
+            bs.gameTimer(500, self._precipitate)
 
     def _createProtection(self):
         self.timesProtected += 1

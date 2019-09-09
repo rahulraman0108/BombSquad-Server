@@ -1,4 +1,3 @@
-import bs
 import os
 import json
 from bsSpaz import *
@@ -26,9 +25,11 @@ class PermissionEffect(object):
 
         def a():
             self.emit()
+            self.ice_smoke()
 
         def b():
             self.emit2()
+            self.ice_smoke()
 
         def c():
             self.emit3()
@@ -68,6 +69,25 @@ class PermissionEffect(object):
         # animate prefix
         if prefixAnimate:
             bsUtils.animateArray(self._Text, 'color', 3, prefixAnim, True)  # animate prefix color
+
+    def ice_smoke(self):
+        if self.owner.exists():
+            vel = 4
+            bs.emitBGDynamics(position=(self.owner.torsoPosition[0] - 0.25 + random.random() * 0.5,
+                                        self.owner.torsoPosition[1] - 0.25 + random.random() * 0.5,
+                                        self.owner.torsoPosition[2] - 0.25 + random.random() * 0.8),
+                              velocity=((-vel + (random.random() * (vel * 2))) + self.owner.velocity[0] * 2,
+                                        (-vel + (random.random() * (vel * 2))) + self.owner.velocity[1] * 4,
+                                        (-vel + (random.random() * (vel * 2))) + self.owner.velocity[2] * 2),
+                              count=3, scale=0.8, emitType='tendrils', tendrilType='smoke')
+            bs.emitBGDynamics(position=(self.owner.torsoPosition[0] - 0.25 + random.random() * 0.5,
+                                        self.owner.torsoPosition[1] - 0.25 + random.random() * 0.5,
+                                        self.owner.torsoPosition[2] - 0.25 + random.random() * 0.8),
+                              velocity=((-vel + (random.random() * (vel * 2))) + self.owner.velocity[0] * 2,
+                                        (-vel + (random.random() * (vel * 2))) + self.owner.velocity[1] * 4,
+                                        (-vel + (random.random() * (vel * 2))) + self.owner.velocity[2] * 2),
+                              count=int(5 + random.random() * 5),
+                              scale=random.random() * 2, spread=random.random() * 0.2, chunkType='sweat')
 
     def emit(self):
         if self.owner.exists():
@@ -146,8 +166,8 @@ def __init__(self, color=(1, 1, 1), highlight=(0.5, 0.5, 0.5), character="Spaz",
 
     profiles = []
     profiles = self._player.getInputDevice()._getPlayerProfiles()
-    if os.path.exists(bs.getEnvironment()['systemScriptsDirectory']+"/toppers.json"):
-        f = open(bs.getEnvironment()['systemScriptsDirectory']+"/toppers.json", "r")
+    if os.path.exists(bs.getEnvironment()['systemScriptsDirectory'] + "/toppers.json"):
+        f = open(bs.getEnvironment()['systemScriptsDirectory'] + "/toppers.json", "r")
         aid = str(self._player.get_account_id())
         jd = {}
         try:
